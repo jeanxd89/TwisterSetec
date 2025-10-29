@@ -4,450 +4,173 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twister Quiz</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        h1 {
-            color: #ff5722;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-        
-        h2 {
-            color: #333;
-            margin: 15px 0 10px;
-        }
-        
-        .acesso {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 15px 0;
-        }
-        
-        .acesso div {
-            background-color: #4caf50;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        .quiz-section {
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .option {
-            padding: 12px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .option:hover {
-            background-color: #d0d0d0;
-        }
-        
-        .option.selected {
-            background-color: #4caf50;
-            color: white;
-        }
-        
-        .submit-btn {
-            background-color: #ff5722;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 15px;
-            width: 100%;
-            transition: background-color 0.3s;
-        }
-        
-        .submit-btn:hover {
-            background-color: #e64a19;
-        }
-        
-        .submit-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .result {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-        
-        .result.correct {
-            background-color: #e8f5e9;
-            color: #4caf50;
-            display: block;
-        }
-        
-        .result.incorrect {
-            background-color: #ffebee;
-            color: #f44336;
-            display: block;
-        }
-        
-        .twister-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        .twister-board {
-            width: 300px;
-            height: 300px;
-            background-color: #4caf50;
-            border-radius: 50%;
-            position: relative;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
-        .twister-board::before {
-            content: '';
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            background-color: white;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 10;
-        }
-        
-        .segment {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            transform-origin: 50% 50%;
-            clip-path: polygon(50% 50%, 50% 0, 100% 0);
-        }
-        
-        .segment:nth-child(1) {
-            background-color: #ff5722;
-            transform: rotate(0deg);
-        }
-        
-        .segment:nth-child(2) {
-            background-color: #4caf50;
-            transform: rotate(60deg);
-        }
-        
-        .segment:nth-child(3) {
-            background-color: #2196f3;
-            transform: rotate(120deg);
-        }
-        
-        .segment:nth-child(4) {
-            background-color: #ffeb3b;
-            transform: rotate(180deg);
-        }
-        
-        .segment:nth-child(5) {
-            background-color: #9c27b0;
-            transform: rotate(240deg);
-        }
-        
-        .segment:nth-child(6) {
-            background-color: #ff9800;
-            transform: rotate(300deg);
-        }
-        
-        .pointer {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 40px;
-            background-color: #333;
-            clip-path: polygon(50% 0, 0 100%, 100% 100%);
-            z-index: 20;
-        }
-        
-        .spin-btn {
-            background-color: #ff5722;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        
-        .spin-btn:hover {
-            background-color: #e64a19;
-        }
-        
-        .spin-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .result-section {
-            margin-top: 20px;
-            text-align: center;
-            padding: 15px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            width: 100%;
-            display: none;
-        }
-        
-        .result-section.active {
-            display: block;
-        }
-        
-        .rules {
-            margin-top: 30px;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
-        }
-        
-        .rules h3 {
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .rules ul {
-            padding-left: 20px;
-        }
-        
-        .rules li {
-            margin-bottom: 8px;
-        }
-        
-        .footer {
-            margin-top: 20px;
-            text-align: center;
-            color: #666;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Twister Quiz</h1>
-            <p>Responda corretamente e gire a roleta!</p>
+    <div class="game-container">
+        <header class="game-header">
+            <h1 class="game-title">🎯 Twister Quiz</h1>
+            <p class="game-subtitle">Responda corretamente e gire a roleta!</p>
             
-            <div class="acesso">
-                <div>4</div>
-                <div>Textativa</div>
-                <div>6</div>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-label">Rodada</span>
+                    <span class="info-value" id="round-counter">1/10</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Acertos</span>
+                    <span class="info-value" id="score-counter">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Jogadores</span>
+                    <span class="info-value">2-4</span>
+                </div>
             </div>
         </header>
-        
-        <div class="quiz-section">
-            <h2>Pergunta</h2>
-            <div class="question" id="question">Quantos continentes existem no mundo?</div>
-            
-            <div class="options">
-                <div class="option" data-value="5">5</div>
-                <div class="option" data-value="6">6</div>
-                <div class="option" data-value="7">7</div>
-                <div class="option" data-value="8">8</div>
+
+        <main class="game-main">
+            <!-- Tela de Início -->
+            <div class="screen" id="start-screen">
+                <div class="welcome-section">
+                    <h2>Bem-vindo ao Twister Quiz!</h2>
+                    <div class="instructions">
+                        <h3>Como Jogar:</h3>
+                        <ul>
+                            <li>🎯 Responda perguntas corretamente</li>
+                            <li>🎡 Gire a roleta para receber instruções</li>
+                            <li>🧘 Execute os movimentos no tapete</li>
+                            <li>🏆 Complete 10 rodadas para vencer!</li>
+                        </ul>
+                    </div>
+                    <button class="btn-primary" id="start-btn">Começar Jogo</button>
+                </div>
             </div>
-            
-            <button class="submit-btn" id="submit-btn" disabled>Confirmar Resposta</button>
-            
-            <div class="result" id="result"></div>
-        </div>
-        
-        <div class="twister-section">
-            <h2>Pé Direito - Azul</h2>
-            <p>Acerte uma pergunta para girar!</p>
-            
-            <div class="twister-board" id="twister-board">
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="segment"></div>
-                <div class="pointer"></div>
+
+            <!-- Tela do Quiz -->
+            <div class="screen hidden" id="quiz-screen">
+                <div class="quiz-section">
+                    <div class="question-header">
+                        <span class="question-number" id="question-number">Pergunta 1</span>
+                        <span class="question-difficulty">Geral</span>
+                    </div>
+                    
+                    <div class="question-card">
+                        <h3 class="question-text" id="question-text">Quantos continentes existem no mundo?</h3>
+                        
+                        <div class="options-grid" id="options-container">
+                            <!-- Opções serão inseridas via JavaScript -->
+                        </div>
+                        
+                        <div class="quiz-actions">
+                            <button class="btn-secondary" id="skip-btn">Pular Pergunta</button>
+                            <button class="btn-primary" id="confirm-btn" disabled>Confirmar Resposta</button>
+                        </div>
+                    </div>
+                    
+                    <div class="result-feedback" id="result-feedback"></div>
+                </div>
             </div>
-            
-            <button class="spin-btn" id="spin-btn" disabled>Girar Roleta</button>
-        </div>
-        
-        <div class="result-section" id="result-section">
-            <h2>Resultado</h2>
-            <p id="result-text">Você deve colocar o <span id="body-part">Pé Direito</span> no círculo <span id="color">Azul</span>!</p>
-        </div>
-        
-        <div class="rules">
-            <h3>Regras do Jogo</h3>
-            <ul>
-                <li>Gire a roleta e movimente-se conforme o resultado.</li>
-                <li>Os jogadores devem mover a mão ou o pé até a cor tirada na roleta o mais rápido possível.</li>
-                <li>Caso o seu joelho ou seu cotovelo toquem o tapete, ou se você cair, você está fora!</li>
-                <li>O último jogador que ficar é o vencedor!</li>
-                <li>Coloque apenas uma mão ou um pé em cada círculo.</li>
-                <li>O primeiro jogador que tocar um espaço tem direito a ele.</li>
-                <li>Depois de se movimentar, você não pode se mexer de novo.</li>
-            </ul>
-        </div>
-        
-        <div class="footer">
-            <p>Quando o direito é obrigado, 10:23</p>
-            <p>© 2025 Twister Quiz. Todos os direitos reservados.</p>
+
+            <!-- Tela da Roleta -->
+            <div class="screen hidden" id="wheel-screen">
+                <div class="wheel-section">
+                    <h2>🎡 Hora de Girar a Roleta!</h2>
+                    <p class="wheel-instruction">Você acertou! Agora gire a roleta para saber qual movimento fazer.</p>
+                    
+                    <div class="wheel-container">
+                        <div class="wheel" id="twister-wheel">
+                            <div class="wheel-center"></div>
+                            <div class="pointer"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-spin" id="spin-btn">GIRAR ROLETA</button>
+                    
+                    <div class="wheel-result hidden" id="wheel-result">
+                        <h3>🎯 Movimento Requerido:</h3>
+                        <div class="movement-instruction">
+                            <span class="body-part" id="result-body-part">Pé Direito</span>
+                            <span class="on-text">em</span>
+                            <span class="color-circle" id="result-color">Azul</span>
+                        </div>
+                        <p class="movement-tip">Coloque rapidamente no círculo correspondente do tapete!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tela de Resultado Final -->
+            <div class="screen hidden" id="results-screen">
+                <div class="results-section">
+                    <h2>🎊 Fim do Jogo!</h2>
+                    
+                    <div class="final-score">
+                        <div class="score-card">
+                            <h3>Pontuação Final</h3>
+                            <div class="score-value" id="final-score">0</div>
+                            <div class="score-label">acertos em 10 rodadas</div>
+                        </div>
+                    </div>
+                    
+                    <div class="performance-message" id="performance-message">
+                        <!-- Mensagem de desempenho será inserida via JavaScript -->
+                    </div>
+                    
+                    <div class="game-actions">
+                        <button class="btn-secondary" id="review-btn">Ver Respostas</button>
+                        <button class="btn-primary" id="restart-btn">Jogar Novamente</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Controles do Jogo -->
+        <footer class="game-footer">
+            <div class="game-controls">
+                <button class="btn-control" id="rules-btn">📋 Regras</button>
+                <button class="btn-control" id="reset-btn">🔄 Reiniciar</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de Regras -->
+    <div class="modal hidden" id="rules-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Regras do Twister</h3>
+                <button class="close-btn" id="close-rules">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="rules-section">
+                    <h4>🎮 COMO JOGAR</h4>
+                    <ul>
+                        <li>Gire a roleta e movimente-se conforme o resultado</li>
+                        <li>Os jogadores devem mover a mão ou o pé até a cor tirada na roleta o mais rápido possível</li>
+                        <li>Caso seu joelho ou cotovelo toquem o tapete, ou se você cair, está fora!</li>
+                        <li>O último jogador que ficar é o vencedor!</li>
+                    </ul>
+                </div>
+                
+                <div class="rules-section">
+                    <h4>📝 REGRAS IMPORTANTES</h4>
+                    <ul>
+                        <li>Coloque apenas uma mão ou um pé em cada círculo</li>
+                        <li>O primeiro jogador que tocar um espaço tem direito a ele</li>
+                        <li>Depois de se movimentar, não pode se mexer de novo</li>
+                        <li>Se todos os círculos da mesma cor estiverem ocupados, gire novamente</li>
+                    </ul>
+                </div>
+                
+                <div class="rules-section">
+                    <h4>🎯 MOVIMENTOS ESPECIAIS</h4>
+                    <ul>
+                        <li><strong>Ar:</strong> Coloque a parte do corpo indicada no ar, não no tapete</li>
+                        <li><strong>Novos Movimentos:</strong> O jogador que girar pode inventar movimentos criativos</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const options = document.querySelectorAll('.option');
-            const submitBtn = document.getElementById('submit-btn');
-            const result = document.getElementById('result');
-            const spinBtn = document.getElementById('spin-btn');
-            const twisterBoard = document.getElementById('twister-board');
-            const resultSection = document.getElementById('result-section');
-            const resultText = document.getElementById('result-text');
-            const bodyPartElement = document.getElementById('body-part');
-            const colorElement = document.getElementById('color');
-            
-            let selectedOption = null;
-            let rotation = 0;
-            
-            // Configuração das opções de resposta
-            options.forEach(option => {
-                option.addEventListener('click', function() {
-                    options.forEach(opt => opt.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedOption = this.getAttribute('data-value');
-                    submitBtn.disabled = false;
-                });
-            });
-            
-            // Verificação da resposta
-            submitBtn.addEventListener('click', function() {
-                if (selectedOption === '7') {
-                    result.textContent = 'Resposta Correta! Agora você pode girar a roleta.';
-                    result.className = 'result correct';
-                    spinBtn.disabled = false;
-                } else {
-                    result.textContent = 'Resposta Incorreta! Tente novamente.';
-                    result.className = 'result incorrect';
-                    spinBtn.disabled = true;
-                    
-                    // Reset das opções após resposta incorreta
-                    setTimeout(() => {
-                        options.forEach(opt => opt.classList.remove('selected'));
-                        selectedOption = null;
-                        submitBtn.disabled = true;
-                        result.style.display = 'none';
-                    }, 2000);
-                }
-            });
-            
-            // Giro da roleta
-            spinBtn.addEventListener('click', function() {
-                // Desativa o botão durante o giro
-                spinBtn.disabled = true;
-                submitBtn.disabled = true;
-                
-                // Gira a roleta
-                const extraRotation = 360 * 5; // 5 voltas completas
-                const segmentAngle = 60; // Cada segmento tem 60 graus
-                const randomSegment = Math.floor(Math.random() * 6); // 0 a 5
-                
-                // Calcula o ângulo final (centralizado no segmento)
-                const finalRotation = extraRotation + (randomSegment * segmentAngle) + (segmentAngle / 2);
-                
-                // Aplica a rotação
-                twisterBoard.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
-                twisterBoard.style.transform = `rotate(${-finalRotation}deg)`;
-                
-                // Define o resultado após a animação
-                setTimeout(() => {
-                    const bodyParts = ['Mão Direita', 'Mão Esquerda', 'Pé Direito', 'Pé Esquerdo'];
-                    const colors = ['Vermelho', 'Verde', 'Azul', 'Amarelo', 'Roxo', 'Laranja'];
-                    
-                    const bodyPart = bodyParts[Math.floor(Math.random() * bodyParts.length)];
-                    const color = colors[randomSegment];
-                    
-                    bodyPartElement.textContent = bodyPart;
-                    colorElement.textContent = color;
-                    
-                    resultSection.classList.add('active');
-                    
-                    // Habilita para próxima rodada após um tempo
-                    setTimeout(() => {
-                        spinBtn.disabled = true;
-                        submitBtn.disabled = true;
-                        options.forEach(opt => opt.classList.remove('selected'));
-                        selectedOption = null;
-                        result.style.display = 'none';
-                        resultSection.classList.remove('active');
-                        
-                        // Reseta a roleta
-                        twisterBoard.style.transition = 'none';
-                        twisterBoard.style.transform = 'rotate(0deg)';
-                    }, 5000);
-                }, 3000);
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
