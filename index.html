@@ -4,384 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Twister Quiz</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        
-        .acesso {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .acesso div {
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .content {
-            padding: 25px;
-        }
-        
-        .question-section {
-            margin-bottom: 25px;
-        }
-        
-        .question-section h2 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #ff6b6b;
-            padding-bottom: 8px;
-        }
-        
-        .question-text {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: #444;
-            line-height: 1.4;
-        }
-        
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .option {
-            padding: 15px;
-            background-color: #f8f9fa;
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-        }
-        
-        .option:hover {
-            background-color: #e9ecef;
-            border-color: #ff6b6b;
-            transform: translateY(-2px);
-        }
-        
-        .option.selected {
-            background-color: #4ecdc4;
-            color: white;
-            border-color: #4ecdc4;
-        }
-        
-        .submit-btn {
-            background-color: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 15px;
-            transition: background-color 0.3s;
-        }
-        
-        .submit-btn:hover {
-            background-color: #ff5252;
-        }
-        
-        .submit-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .result {
-            margin-top: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-        }
-        
-        .result.correct {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            display: block;
-        }
-        
-        .result.incorrect {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-            display: block;
-        }
-        
-        .twister-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            text-align: center;
-            border: 2px dashed #ff6b6b;
-        }
-        
-        .twister-section h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .twister-section p {
-            color: #666;
-            font-style: italic;
-        }
-        
-        .wheel-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-        }
-        
-        .wheel {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                #ff6b6b 0deg 60deg,
-                #4ecdc4 60deg 120deg,
-                #45b7d1 120deg 180deg,
-                #ffd166 180deg 240deg,
-                #bb86fc 240deg 300deg,
-                #ffa726 300deg 360deg
-            );
-            position: relative;
-            transition: transform 3s cubic-bezier(0.2, 0.8, 0.3, 1);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .wheel-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 40px;
-            height: 40px;
-            background: white;
-            border-radius: 50%;
-            border: 3px solid #333;
-            z-index: 10;
-        }
-        
-        .pointer {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 30px;
-            background: #333;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            z-index: 20;
-        }
-        
-        .spin-btn {
-            background-color: #4ecdc4;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        
-        .spin-btn:hover {
-            background-color: #3db8af;
-        }
-        
-        .spin-btn:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 15px;
-            color: #666;
-            font-size: 0.9rem;
-            border-top: 1px solid #eee;
-            background-color: #f8f9fa;
-        }
-        
-        @media (max-width: 500px) {
-            .container {
-                border-radius: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .question-text {
-                font-size: 1.1rem;
-            }
-            
-            .wheel-container {
-                width: 150px;
-                height: 150px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Twister Quiz</h1>
-            <p>Responda corretamente e gire a roleta!</p>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <h1 class="game-title">Twister Quiz</h1>
+            <p class="game-subtitle">Responda corretamente e gire a roleta!</p>
             
-            <div class="acesso">
-                <div>4</div>
-                <div>Textativa</div>
-                <div>6</div>
-            </div>
-        </div>
-        
-        <div class="content">
-            <div class="question-section">
-                <h2>Pergunta</h2>
-                <div class="question-text">Quantos continentes existem no mundo?</div>
-                
-                <div class="options">
-                    <div class="option" onclick="selectOption(this)">5</div>
-                    <div class="option" onclick="selectOption(this)">6</div>
-                    <div class="option" onclick="selectOption(this)">7</div>
-                    <div class="option" onclick="selectOption(this)">8</div>
+            <div class="game-info">
+                <div class="info-item">
+                    <span class="info-label">Acesso</span>
+                    <span class="info-value">4</span>
                 </div>
-                
-                <button class="submit-btn" id="submit-btn" onclick="checkAnswer()" disabled>Confirmar Resposta</button>
-                
-                <div class="result" id="result"></div>
+                <div class="info-item">
+                    <span class="info-label">Tipo</span>
+                    <span class="info-value">Textativa</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Rodada</span>
+                    <span class="info-value">6</span>
+                </div>
             </div>
-            
-            <div class="twister-section">
-                <h3>Pé Direito - Azul</h3>
-                <p>Acerte uma pergunta para girar!</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="game-content">
+            <!-- Question Section -->
+            <section class="question-section">
+                <h2>Pergunta</h2>
+                <div class="question-card">
+                    <p class="question-text">Quantos continentes existem no mundo?</p>
+                    
+                    <div class="options">
+                        <div class="option">
+                            <input type="radio" id="option1" name="quiz" value="5">
+                            <label for="option1">5</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="option2" name="quiz" value="6">
+                            <label for="option2">6</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="option3" name="quiz" value="7">
+                            <label for="option3">7</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" id="option4" name="quiz" value="8">
+                            <label for="option4">8</label>
+                        </div>
+                    </div>
+                    
+                    <button class="submit-btn" onclick="checkAnswer()">Confirmar Resposta</button>
+                </div>
+            </section>
+
+            <!-- Twister Section -->
+            <section class="twister-section">
+                <div class="twister-instruction">
+                    <h3>Pé Direito - Azul</h3>
+                    <p>Acerte uma pergunta para girar!</p>
+                </div>
                 
                 <div class="wheel-container">
                     <div class="wheel" id="twister-wheel">
                         <div class="wheel-center"></div>
                         <div class="pointer"></div>
+                        <!-- Segmentos da roleta -->
+                        <div class="segment red"></div>
+                        <div class="segment blue"></div>
+                        <div class="segment green"></div>
+                        <div class="segment yellow"></div>
+                        <div class="segment purple"></div>
+                        <div class="segment orange"></div>
                     </div>
                 </div>
                 
                 <button class="spin-btn" id="spin-btn" onclick="spinWheel()" disabled>Girar Roleta</button>
-            </div>
-        </div>
-        
-        <div class="footer">
+                
+                <div class="result-display" id="result-display">
+                    <p>Coloque o <span class="body-part">Pé Direito</span> no círculo <span class="color">Azul</span>!</p>
+                </div>
+            </section>
+
+            <!-- Game Rules -->
+            <section class="rules-section">
+                <h3>Regras do Jogo</h3>
+                <div class="rules-content">
+                    <div class="rule-item">
+                        <h4>🎯 Como Jogar</h4>
+                        <p>Gire a roleta e movimente-se. Os jogadores devem mover a mão ou o pé até a cor tirada na roleta o mais rápido possível.</p>
+                    </div>
+                    
+                    <div class="rule-item">
+                        <h4>❌ Eliminação</h4>
+                        <p>Caso o seu joelho ou seu cotovelo toquem o tapete, ou se você cair, você está fora!</p>
+                    </div>
+                    
+                    <div class="rule-item">
+                        <h4>🏆 Vitória</h4>
+                        <p>O último jogador que ficar é o vencedor!</p>
+                    </div>
+                    
+                    <div class="rule-item">
+                        <h4>📝 Regras Importantes</h4>
+                        <ul>
+                            <li>Coloque apenas uma mão ou um pé em cada círculo</li>
+                            <li>O primeiro jogador que tocar um espaço tem direito a ele</li>
+                            <li>Não pode se mexer depois de se posicionar</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="game-footer">
             <p>Quando o direito é obrigado, 10:23</p>
-        </div>
+            <p>Twister Quiz © 2024 - Todos os direitos reservados</p>
+        </footer>
     </div>
 
     <script>
-        let selectedOption = null;
-        let answerChecked = false;
-        
-        function selectOption(element) {
-            if (answerChecked) return;
-            
-            // Remove seleção anterior
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            // Adiciona seleção atual
-            element.classList.add('selected');
-            selectedOption = element.textContent;
-            document.getElementById('submit-btn').disabled = false;
-        }
-        
         function checkAnswer() {
-            if (selectedOption === null) return;
-            
-            const resultElement = document.getElementById('result');
-            const submitBtn = document.getElementById('submit-btn');
+            const selectedOption = document.querySelector('input[name="quiz"]:checked');
             const spinBtn = document.getElementById('spin-btn');
+            const resultDisplay = document.getElementById('result-display');
             
-            if (selectedOption === '7') {
-                resultElement.textContent = 'Resposta Correta! Agora você pode girar a roleta.';
-                resultElement.className = 'result correct';
-                spinBtn.disabled = false;
-            } else {
-                resultElement.textContent = 'Resposta Incorreta! Tente novamente.';
-                resultElement.className = 'result incorrect';
-                spinBtn.disabled = true;
-                
-                // Reset após resposta incorreta
-                setTimeout(() => {
-                    document.querySelectorAll('.option').forEach(opt => {
-                        opt.classList.remove('selected');
-                    });
-                    selectedOption = null;
-                    submitBtn.disabled = true;
-                    resultElement.style.display = 'none';
-                    answerChecked = false;
-                }, 2000);
+            if (!selectedOption) {
+                alert('Por favor, selecione uma resposta!');
+                return;
             }
             
-            answerChecked = true;
-            submitBtn.disabled = true;
+            if (selectedOption.value === '7') {
+                alert('🎉 Resposta Correta! Agora você pode girar a roleta.');
+                spinBtn.disabled = false;
+                resultDisplay.style.display = 'block';
+            } else {
+                alert('❌ Resposta Incorreta! Tente novamente.');
+                // Limpa a seleção
+                selectedOption.checked = false;
+            }
         }
         
         function spinWheel() {
             const wheel = document.getElementById('twister-wheel');
             const spinBtn = document.getElementById('spin-btn');
+            const resultDisplay = document.getElementById('result-display');
             
             // Desativa o botão durante o giro
             spinBtn.disabled = true;
@@ -391,32 +161,49 @@
             const segmentAngle = 60; // Cada segmento tem 60 graus
             const randomSegment = Math.floor(Math.random() * 6); // 0 a 5
             
-            // Calcula o ângulo final (centralizado no segmento)
-            const finalRotation = extraRotation + (randomSegment * segmentAngle) + (segmentAngle / 2);
+            // Calcula o ângulo final
+            const finalRotation = extraRotation + (randomSegment * segmentAngle);
             
             // Aplica a rotação
             wheel.style.transform = `rotate(${-finalRotation}deg)`;
             
-            // Habilita para próxima rodada após um tempo
+            // Define cores e partes do corpo
+            const colors = ['Vermelho', 'Azul', 'Verde', 'Amarelo', 'Roxo', 'Laranja'];
+            const bodyParts = ['Mão Direita', 'Mão Esquerda', 'Pé Direito', 'Pé Esquerdo'];
+            
+            const selectedColor = colors[randomSegment];
+            const selectedBodyPart = bodyParts[Math.floor(Math.random() * bodyParts.length)];
+            
+            // Atualiza o resultado
             setTimeout(() => {
-                // Reseta para próxima pergunta
-                document.querySelectorAll('.option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                selectedOption = null;
-                document.getElementById('submit-btn').disabled = true;
-                document.getElementById('result').style.display = 'none';
-                spinBtn.disabled = true;
-                answerChecked = false;
+                resultDisplay.innerHTML = `
+                    <p>Coloque o <span class="body-part">${selectedBodyPart}</span> no círculo <span class="color">${selectedColor}</span>!</p>
+                `;
+                resultDisplay.style.display = 'block';
                 
-                // Reseta a roleta
-                wheel.style.transition = 'none';
-                wheel.style.transform = 'rotate(0deg)';
+                // Prepara para próxima rodada
                 setTimeout(() => {
-                    wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
-                }, 50);
-            }, 4000);
+                    // Reseta a roleta
+                    wheel.style.transition = 'none';
+                    wheel.style.transform = 'rotate(0deg)';
+                    setTimeout(() => {
+                        wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
+                    }, 50);
+                    
+                    // Limpa seleções
+                    document.querySelectorAll('input[name="quiz"]').forEach(input => {
+                        input.checked = false;
+                    });
+                    spinBtn.disabled = true;
+                }, 3000);
+            }, 3000);
         }
+        
+        // Adiciona transição à roleta após carregamento
+        document.addEventListener('DOMContentLoaded', function() {
+            const wheel = document.getElementById('twister-wheel');
+            wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
+        });
     </script>
 </body>
 </html>
