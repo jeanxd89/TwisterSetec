@@ -21,11 +21,11 @@
       <div class="roleta-wrapper">
         <div class="seta"></div>
         <div class="roleta" id="roleta">
-          <!-- camadas de brilho -->
-          <div class="brilho vermelho"></div>
-          <div class="brilho azul"></div>
-          <div class="brilho verde"></div>
-          <div class="brilho amarelo"></div>
+          <div class="brilho-vermelho brilho"></div>
+          <div class="brilho-azul brilho"></div>
+          <div class="brilho-verde brilho"></div>
+          <div class="brilho-amarelo brilho"></div>
+          <div class="reflexo"></div>
         </div>
       </div>
 
@@ -33,8 +33,8 @@
 
       <div class="pergunta">
         <p id="textoPergunta"></p>
-        <input id="resposta" placeholder="Digite sua resposta...">
-        <button id="btnResponder" onclick="verificarResposta()">Responder</button>
+        <div id="alternativas"></div>
+        <button id="btnProxima" onclick="novaPergunta()" disabled>Próxima Pergunta</button>
       </div>
 
       <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
@@ -50,7 +50,6 @@
     </ul>
   </footer>
 
-  <!-- sons -->
   <audio id="somGiro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c3b0a2a29f.mp3"></audio>
   <audio id="somCorreto" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cf29c9289.mp3"></audio>
   <audio id="somErro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d6cc26a14f.mp3"></audio>
