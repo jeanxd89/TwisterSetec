@@ -10,7 +10,7 @@ let perguntasFeitas = 0;
 let acertos = 0;
 let perguntaAtual = null;
 
-// 40 perguntas de conhecimentos gerais
+// 40 perguntas
 const perguntas = [
   {pergunta:"Qual é a capital do Brasil?",resposta:"Brasília",alternativas:["Brasília","Rio de Janeiro","São Paulo","Salvador"]},
   {pergunta:"Quem pintou a Mona Lisa?",resposta:"Leonardo da Vinci",alternativas:["Leonardo da Vinci","Michelangelo","Van Gogh","Picasso"]},
@@ -32,17 +32,16 @@ const perguntas = [
   {pergunta:"Qual é o menor osso do corpo humano?",resposta:"Estribo",alternativas:["Fêmur","Tíbia","Esterno","Estribo"]},
   {pergunta:"Quem escreveu O Pequeno Príncipe?",resposta:"Antoine de Saint-Exupéry",alternativas:["Antoine de Saint-Exupéry","J.K. Rowling","Hans Christian Andersen","Roald Dahl"]},
   {pergunta:"Qual continente é chamado de Velho Mundo?",resposta:"Europa",alternativas:["Europa","África","Ásia","América"]},
-  // ... (adicione mais perguntas até 40)
+  // ... adicione mais até 40 perguntas
 ];
 
-// Utils
 function shuffleArray(array){ return array.sort(()=>Math.random()-0.5); }
 
-// Nova Pergunta
 function novaPergunta(){
   if(perguntasFeitas>=40){
     resultado.innerHTML="🎉 Você completou todas as perguntas!";
     document.getElementById("botaoGirar").disabled=true;
+    document.getElementById("alternativas").innerHTML="";
     return;
   }
 
@@ -66,7 +65,6 @@ function novaPergunta(){
   document.getElementById("perguntasRestantes").textContent = `Perguntas restantes: ${40-perguntasFeitas}`;
 }
 
-// Verificar Resposta
 function verificarResposta(a){
   if(a===perguntaAtual.resposta){
     resultado.innerHTML="✅ Resposta correta!";
@@ -79,42 +77,8 @@ function verificarResposta(a){
   document.getElementById("acertos").textContent=`Acertos: ${acertos} ✅`;
   document.getElementById("botaoGirar").disabled=false;
   document.getElementById("btnProxima").disabled=true;
-  document.querySelectorAll('.brilho').forEach(b=>b.classList.remove('active'));
-}
+  document.querySelectorAll('.brilho-overlay').forEach(b=>b.classList.remove('active'));
 
-// Girar roleta
-function girar(){
-  if(document.getElementById("botaoGirar").disabled) return;
-
-  const corIndex = Math.floor(Math.random()*4);
-  const membroIndex = Math.floor(Math.random()*4);
-
-  const angulo = 720 + (360 - corIndex*90 - 45);
-  roleta.style.transition = "transform 3s ease-out";
-  roleta.style.transform = `rotate(${angulo}deg)`;
-  somGiro.play();
-
-  document.querySelectorAll('.brilho').forEach(b=>b.classList.remove('active'));
-
-  setTimeout(()=>{
-    const brilhoSelecionado = document.querySelectorAll('.brilho')[corIndex];
-    brilhoSelecionado.classList.add('active');
-
-    resultado.innerHTML = `Coloque a <strong>${membros[membroIndex]}</strong> na cor <strong>${cores[corIndex]}</strong>`;
-
-    document.getElementById("botaoGirar").disabled = true;
-    document.getElementById("btnProxima").disabled = false;
-
-    novaPergunta();
-  }, 3200);
-}
-
-// Eventos
-document.getElementById("botaoGirar").addEventListener("click", girar);
-document.getElementById("btnProxima").addEventListener("click", novaPergunta);
-
-// Inicializa primeira pergunta
-novaPergunta();
 
 
 
