@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Twister Online</title>
+  <title>Twister Online Deluxe</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <h1>🎉 Twister Online 🎨</h1>
+  <h1>🎉 Twister Online Deluxe 🎨</h1>
 
   <div class="roleta-container">
-    <div class="seta"></div>
-    <div class="roleta" id="roleta"></div>
+    <div class="roleta" id="roleta">
+      <div class="seta" id="seta"></div>
+    </div>
   </div>
 
   <div id="resultado"></div>
@@ -26,7 +28,7 @@
   <button id="botaoGirar" onclick="girar()" disabled>Girar Roleta 🎲</button>
 
   <div class="regras">
-    <h3>📜 Regras do Twister:</h3>
+    <h3>📜 Regras do Twister</h3>
     <ul>
       <li>Um jogador gira a roleta e anuncia o resultado (Ex: “Mão direita no vermelho”).</li>
       <li>Os jogadores colocam o membro indicado sobre a cor sorteada.</li>
@@ -44,4 +46,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
