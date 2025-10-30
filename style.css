@@ -1,54 +1,71 @@
- body {
-  font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(135deg, #ff4d4d, #4d79ff, #4dff88);
+ /* === BASE === */
+body {
+  font-family: 'Nunito', sans-serif;
+  background: radial-gradient(circle at top left, #ff5959, #4d79ff, #4dff88);
   background-size: 300% 300%;
-  animation: gradient 10s ease infinite;
+  animation: movebg 12s infinite alternate;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #fff;
   margin: 0;
-  text-align: center;
+  color: white;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
-@keyframes gradient {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
+@keyframes movebg {
+  0% {background-position: 0% 0%;}
+  100% {background-position: 100% 100%;}
+}
+
+/* === HEADER === */
+header {
+  text-align: center;
+  margin-top: 20px;
 }
 
 h1 {
-  margin-top: 30px;
-  font-size: 2.8em;
   font-family: 'Baloo 2', cursive;
+  font-size: 2.8em;
   text-shadow: 3px 3px 10px rgba(0,0,0,0.4);
 }
 
+.status {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 1em;
+  background: rgba(0,0,0,0.3);
+  padding: 10px 20px;
+  border-radius: 12px;
+}
+
+/* === ROLETA === */
 .roleta-container {
   position: relative;
-  margin-top: 30px;
-  width: 85vw;
-  max-width: 350px;
+  margin: 35px 0;
+  width: 90vw;
+  max-width: 360px;
+  perspective: 800px;
 }
 
 .roleta {
   width: 100%;
   aspect-ratio: 1;
   border-radius: 50%;
-  border: 8px solid #fff;
+  border: 10px solid #fff;
   background: conic-gradient(
     red 0deg 90deg,
     blue 90deg 180deg,
     green 180deg 270deg,
     yellow 270deg 360deg
   );
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 4s ease-out;
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-  position: relative;
+  transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 .seta {
@@ -57,12 +74,34 @@ h1 {
   left: 50%;
   width: 0;
   height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-top: 45px solid #fff;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 60px solid white;
   transform-origin: bottom center;
   transform: translate(-50%, -100%) rotate(0deg);
-  transition: transform 4s ease-out;
+  transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* === PERGUNTAS === */
+.pergunta {
+  background: rgba(255,255,255,0.15);
+  padding: 25px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  margin-top: 15px;
+  text-align: center;
+}
+
+.pergunta input {
+  padding: 12px;
+  width: 90%;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+  font-size: 1em;
+  margin-top: 10px;
 }
 
 button {
@@ -70,14 +109,14 @@ button {
   color: #333;
   font-weight: bold;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 15px 25px;
-  margin-top: 25px;
+  margin-top: 20px;
   cursor: pointer;
   font-size: 1.1em;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   font-family: 'Baloo 2', cursive;
-  transition: 0.3s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
 button:hover {
@@ -86,50 +125,36 @@ button:hover {
 }
 
 #resultado {
-  margin-top: 20px;
   font-size: 1.6em;
-  text-shadow: 2px 2px 5px #000;
+  font-weight: bold;
+  text-shadow: 2px 2px 6px #000;
+  margin: 20px;
 }
 
-.pergunta {
-  background: rgba(255,255,255,0.2);
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 25px;
-  width: 85%;
-  max-width: 400px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
-}
-
-.pergunta input {
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  text-align: center;
-  font-size: 1em;
-  margin-top: 10px;
-}
-
-.regras {
-  background: rgba(0,0,0,0.4);
-  padding: 20px;
-  border-radius: 10px;
+/* === FOOTER === */
+footer {
   margin: 30px auto;
   width: 90%;
-  max-width: 500px;
+  max-width: 550px;
+  background: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 10px;
   font-size: 0.95em;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+footer h3 {
+  margin-top: 0;
 }
 
 @media (max-width: 600px) {
   h1 {
-    font-size: 2.1em;
+    font-size: 2.2em;
   }
   button {
     width: 80%;
   }
-  #resultado {
-    font-size: 1.3em;
+  .pergunta {
+    padding: 20px;
   }
 }
 
