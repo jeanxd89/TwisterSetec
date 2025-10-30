@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -18,31 +18,35 @@
   </header>
 
   <main>
-    <section class="roleta-container">
-      <div class="seta" id="seta"></div>
-      <div class="roleta" id="roleta"></div>
-    </section>
+    <div class="game-area">
 
-    <section id="resultado"></section>
+      <!-- ROLETAAAA -->
+      <div class="roleta-wrapper">
+        <div class="seta" id="seta"></div>
+        <div class="roleta" id="roleta"></div>
+      </div>
 
-    <section class="pergunta" id="pergunta">
-      <p id="textoPergunta"></p>
-      <input type="text" id="resposta" placeholder="Digite sua resposta">
-      <button id="btnResponder" onclick="verificarResposta()">Responder</button>
-    </section>
+      <div id="resultado"></div>
 
-    <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
+      <!-- PERGUNTAS -->
+      <div class="pergunta">
+        <p id="textoPergunta"></p>
+        <input type="text" id="resposta" placeholder="Digite sua resposta aqui...">
+        <button id="btnResponder" onclick="verificarResposta()">Responder</button>
+      </div>
+
+      <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
+
+    </div>
   </main>
 
   <footer>
-    <div class="regras">
-      <h3>📜 Regras do Twister</h3>
-      <ul>
-        <li>Gire a roleta e siga a cor e o membro indicado.</li>
-        <li>Não apoie cotovelos ou joelhos no tapete.</li>
-        <li>Quem cair está eliminado. O último vence!</li>
-      </ul>
-    </div>
+    <h3>📜 Regras do Twister</h3>
+    <ul>
+      <li>Gire a roleta e siga a cor e o membro indicado.</li>
+      <li>Não apoie cotovelos ou joelhos no tapete.</li>
+      <li>Quem cair está eliminado. O último vence!</li>
+    </ul>
   </footer>
 
   <!-- Sons -->
@@ -53,6 +57,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
