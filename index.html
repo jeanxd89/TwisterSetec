@@ -4,47 +4,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Twister Online Deluxe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <h1>🎉 Twister Online Deluxe 🎨</h1>
-
-  <div class="roleta-container">
-    <div class="roleta" id="roleta">
-      <div class="seta" id="seta"></div>
+  <header>
+    <h1>🎉 Twister Online Deluxe 🎨</h1>
+    <div class="status">
+      <span id="perguntasRestantes">Perguntas restantes: 40</span>
+      <span id="acertos">Acertos: 0 ✅</span>
     </div>
-  </div>
+  </header>
 
-  <div id="resultado"></div>
+  <main>
+    <section class="roleta-container">
+      <div class="roleta" id="roleta">
+        <div class="seta" id="seta"></div>
+      </div>
+    </section>
 
-  <div class="pergunta" id="pergunta">
-    <p id="textoPergunta"></p>
-    <input type="text" id="resposta" placeholder="Digite sua resposta">
-    <button onclick="verificarResposta()">Responder</button>
-  </div>
+    <section id="resultado"></section>
 
-  <button id="botaoGirar" onclick="girar()" disabled>Girar Roleta 🎲</button>
+    <section class="pergunta" id="pergunta">
+      <p id="textoPergunta"></p>
+      <input type="text" id="resposta" placeholder="Digite sua resposta">
+      <button id="btnResponder" onclick="verificarResposta()">Responder</button>
+    </section>
 
-  <div class="regras">
-    <h3>📜 Regras do Twister</h3>
-    <ul>
-      <li>Um jogador gira a roleta e anuncia o resultado (Ex: “Mão direita no vermelho”).</li>
-      <li>Os jogadores colocam o membro indicado sobre a cor sorteada.</li>
-      <li>Não é permitido apoiar o cotovelo ou o joelho no tapete.</li>
-      <li>Quem cair ou apoiar outra parte do corpo é eliminado.</li>
-      <li>O último jogador em pé vence!</li>
-    </ul>
-  </div>
+    <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
+  </main>
 
-  <!-- Áudios -->
+  <footer>
+    <div class="regras">
+      <h3>📜 Regras do Twister</h3>
+      <ul>
+        <li>Gire a roleta e siga a cor e o membro indicado.</li>
+        <li>Não apoie cotovelos ou joelhos no tapete.</li>
+        <li>Quem cair está eliminado. O último vence!</li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Sons -->
   <audio id="somGiro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c3b0a2a29f.mp3"></audio>
   <audio id="somCorreto" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cf29c9289.mp3"></audio>
   <audio id="somErro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d6cc26a14f.mp3"></audio>
+  <audio id="somClique" src="https://cdn.pixabay.com/audio/2022/03/15/audio_70ff7d9b16.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
