@@ -1,148 +1,286 @@
- const canvas = document.getElementById("roletaCanvas");
-const ctx = canvas.getContext("2d");
-const cores = ["#FF3B3B","#3B7BFF","#3BFF6E","#FFD93B"];
-const nomesCores = ["vermelho","azul","verde","amarelo"];
-const membros = ["Mão direita","Mão esquerda","Pé direito","Pé esquerdo"];
-const resultado = document.getElementById("resultado");
-const somGiro = document.getElementById("somGiro");
-const somCorreto = document.getElementById("somCorreto");
-const somErro = document.getElementById("somErro");
+// --- Referências do DOM ---
+const canvas = document.getElementById('roletaCanvas');
+const ctx = canvas.getContext('2d');
+const botaoGirar = document.getElementById('botaoGirar');
+const btnProxima = document.getElementById('btnProxima');
+const resultado = document.getElementById('resultado');
+const perguntaContainer = document.getElementById('perguntaContainer');
+const textoPergunta = document.getElementById('textoPergunta');
+const alternativas = document.getElementById('alternativas');
+const acertosEl = document.getElementById('acertos');
+const perguntasRestantesEl = document.getElementById('perguntasRestantes');
 
-let acertos = 0;
-let perguntasFeitas = 0;
-let perguntaAtual = null;
-let girando = false;
-let anguloAtual = 0;
+// --- Referências do Modal ---
+const btnRegras = document.getElementById('btnRegras');
+const modalRegras = document.getElementById('modalRegras');
+const btnFecharModal = document.getElementById('btnFecharModal');
 
-// 40 perguntas
-const perguntas = [
-  {pergunta:"Qual é a capital do Brasil?",resposta:"Brasília",alternativas:["Brasília","Rio de Janeiro","São Paulo","Salvador"]},
-  {pergunta:"Quem pintou a Mona Lisa?",resposta:"Leonardo da Vinci",alternativas:["Leonardo da Vinci","Michelangelo","Van Gogh","Picasso"]},
-  {pergunta:"Qual planeta é conhecido como planeta vermelho?",resposta:"Marte",alternativas:["Marte","Vênus","Júpiter","Mercúrio"]},
-  {pergunta:"Quem escreveu Hamlet?",resposta:"William Shakespeare",alternativas:["William Shakespeare","Goethe","Camões","Cervantes"]},
-  {pergunta:"Qual é o maior mamífero terrestre?",resposta:"Elefante africano",alternativas:["Elefante africano","Girafa","Hipopótamo","Rinoceronte"]},
-  {pergunta:"Qual é o símbolo químico do ouro?",resposta:"Au",alternativas:["Au","Ag","Fe","Hg"]},
-  {pergunta:"Quem é o pai da medicina?",resposta:"Hipócrates",alternativas:["Hipócrates","Galeno","Avicena","Paracelso"]},
-  {pergunta:"Qual a velocidade da luz?",resposta:"299.792 km/s",alternativas:["299.792 km/s","150.000 km/s","1.000.000 km/s","300.000 km/s"]},
-  {pergunta:"Qual país é famoso pelos samurais?",resposta:"Japão",alternativas:["Japão","China","Coreia","Tailândia"]},
-  {pergunta:"Qual é a capital da Itália?",resposta:"Roma",alternativas:["Roma","Milão","Florença","Veneza"]},
-  // ... adicione mais até 40 perguntas
+// --- Configurações dos Sons (Tone.js) ---
+const spinSound = new Tone.NoiseSynth({ noise: { type: 'white' }, envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.1 } }).toDestination();
+const correctSound = new Tone.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 } }).toDestination();
+correctSound.volume.value = -10;
+const errorSound = new Tone.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.2 } }).toDestination();
+errorSound.volume.value = -10;
+
+// --- Configurações da Roleta ---
+const segments = [
+  { color: '#FF0000', label: 'Ciência e Natureza', corNome: 'Vermelho' },
+  { color: '#008000', label: 'Geografia', corNome: 'Verde' },
+  { color: '#FFFF00', label: 'Arte e Cultura', corNome: 'Amarelo' },
+  { color: '#0000FF', label: 'Esportes e Entretenimento', corNome: 'Azul' }
+];
+const segmentAngle = 360 / segments.length;
+const radius = canvas.width / 2;
+let currentRotation = 0;
+let isSpinning = false;
+let corSorteadaGlobal = ''; // Para guardar a cor sorteada
+
+// --- Partes do Corpo (RE-ADICIONADAS) ---
+const partesDoCorpo = [
+  'Mão Direita',
+  'Mão Esquerda',
+  'Pé Direito',
+  'Pé Esquerdo'
 ];
 
-// Função para desenhar roleta com efeito de iluminação animada
-function desenharRoleta(){
-  const raio = canvas.width/2;
-  const centro = raio;
-  const total = cores.length;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+// --- Banco de Perguntas (RE-ADICIONADO) ---
+const questionBank = {
+  'Ciência e Natureza': [
+    { q: 'Qual planeta é conhecido como "Planeta Vermelho"?', a: ['Júpiter', 'Marte', 'Vênus'], correct: 1 },
+    { q: 'Qual é o símbolo químico da água?', a: ['H2O', 'CO2', 'O2'], correct: 0 },
+    { q: 'Quantos planetas existem no nosso Sistema Solar?', a: ['8', '9', '10'], correct: 0 },
+    { q: 'Qual é o maior órgão do corpo humano?', a: ['Coração', 'Cérebro', 'Pele'], correct: 2 },
+    { q: 'Qual é a velocidade da luz (aproximada)?', a: ['150.000 km/s', '300.000 km/s', '500.000 km/s'], correct: 1 },
+    { q: 'Quem formulou a teoria da relatividade geral?', a: ['Isaac Newton', 'Albert Einstein', 'Galileu Galilei'], correct: 1 },
+    { q: 'O que as abelhas recolhem para fazer mel?', a: ['Pólen', 'Água', 'Néctar'], correct: 2 },
+    { q: 'Qual gás as plantas absorvem da atmosfera?', a: ['Oxigênio', 'Dióxido de Carbono', 'Nitrogênio'], correct: 1 }
+  ],
+  'Geografia': [
+    { q: 'Qual é o maior continente do mundo?', a: ['Ásia', 'África', 'América'], correct: 0 },
+    { q: 'Qual é o rio mais longo do mundo?', a: ['Nilo', 'Amazonas', 'Mississipi'], correct: 1 },
+    { q: 'Onde fica a Torre Eiffel?', a: ['Londres', 'Berlim', 'Paris'], correct: 2 },
+    { q: 'Qual é a capital do Brasil?', a: ['São Paulo', 'Rio de Janeiro', 'Brasília'], correct: 2 },
+    { q: 'Qual é a montanha mais alta do mundo?', a: ['K2', 'Evereste', 'Mont Blanc'], correct: 1 },
+    { q: 'Em que país ficam as pirâmides de Gizé?', a: ['Grécia', 'Egito', 'Sudão'], correct: 1 },
+    { q: 'Qual é o menor país do mundo?', a: ['Mônaco', 'Nauru', 'Vaticano'], correct: 2 },
+    { q: 'Qual é o maior deserto quente do mundo?', a: ['Saara', 'Gobi', 'Atacama'], correct: 0 }
+  ],
+  'Arte e Cultura': [
+    { q: 'Quem pintou a "Mona Lisa"?', a: ['Michelangelo', 'Leonardo da Vinci', 'Donatello'], correct: 1 },
+    { q: 'Quem escreveu "Dom Quixote"?', a: ['Machado de Assis', 'Shakespeare', 'Miguel de Cervantes'], correct: 2 },
+    { q: 'Qual banda tinha John, Paul, George e Ringo?', a: ['Queen', 'The Beatles', 'Rolling Stones'], correct: 1 },
+    { q: 'Em que país nasceu a Ópera?', a: ['França', 'Itália', 'Alemanha'], correct: 1 },
+    { q: 'Qual arquiteto brasileiro projetou Brasília?', a: ['Aleijadinho', 'Oscar Niemeyer', 'Burle Marx'], correct: 1 },
+    { q: 'Quem escreveu o conto original da "Pequena Sereia"?', a: ['Irmãos Grimm', 'Hans Christian Andersen', 'Monteiro Lobato'], correct: 1 },
+    { q: 'Qual instrumento Beethoven era famoso por tocar?', a: ['Violino', 'Piano', 'Flauta'], correct: 1 },
+    { q: 'Quem esculpiu a famosa estátua de "David"?', a: ['Leonardo da Vinci', 'Michelangelo', 'Rafael'], correct: 1 }
+  ],
+  'Esportes e Entretenimento': [
+    { q: 'Em que país o futebol moderno foi formalizado?', a: ['Brasil', 'Inglaterra', 'Espanha'], correct: 1 },
+    { q: 'Quantos jogadores há num time de basquete em quadra?', a: ['5', '6', '7'], correct: 0 },
+    { q: 'Qual país ganhou mais Copas do Mundo de Futebol?', a: ['Alemanha', 'Itália', 'Brasil'], correct: 2 },
+    { q: 'Qual o evento que ocorre a cada 4 anos com atletas de todo o mundo?', a: ['Copa do Mundo', 'Jogos Olímpicos', 'Super Bowl'], correct: 1 },
+    { q: 'Quem é conhecido como "O Rei do Futebol"?', a: ['Maradona', 'Messi', 'Pelé'], correct: 2 },
+    { q: 'Em que esporte se usa um "birdie" ou "peteca"?', a: ['Tênis', 'Badminton', 'Squash'], correct: 1 },
+    { q: 'Quantos rounds tem uma luta principal de boxe por título mundial?', a: ['10', '12', '15'], correct: 1 },
+    { q: 'Qual o principal torneio de tênis jogado em grama?', a: ['Roland Garros', 'Wimbledon', 'US Open'], correct: 1 }
+  ]
+};
 
-  for(let i=0;i<total;i++){
-    const inicio = (i*(2*Math.PI/total)) + anguloAtual;
-    const fim = ((i+1)*(2*Math.PI/total)) + anguloAtual;
+let availableQuestions = JSON.parse(JSON.stringify(questionBank));
 
-    // Gradiente radial para dar efeito de iluminação
-    let grad = ctx.createRadialGradient(centro,centro,0,centro,centro,raio);
-    grad.addColorStop(0,'#fff');
-    grad.addColorStop(0.3, cores[i]);
-    grad.addColorStop(1, '#000');
-    
+// --- Estado do Jogo ---
+let acertosCount = 0;
+const perguntasTotal = 32;
+let questionsAnswered = 0;
+let currentQuestion = null;
+
+// --- Funções do Jogo ---
+
+function desenharRoleta() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const centerX = radius;
+  const centerY = radius;
+
+  segments.forEach((segment, i) => {
+    const startAngle = (i * segmentAngle * Math.PI) / 180;
+    const endAngle = ((i + 1) * segmentAngle * Math.PI) / 180;
+
     ctx.beginPath();
-    ctx.moveTo(centro,centro);
-    ctx.arc(centro,centro,raio,inicio,fim);
+    ctx.moveTo(centerX, centerY);
+    ctx.arc(centerX, centerY, radius - 5, startAngle, endAngle);
     ctx.closePath();
-    ctx.fillStyle = grad;
+    ctx.fillStyle = segment.color;
     ctx.fill();
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = '#fff';
     ctx.lineWidth = 2;
     ctx.stroke();
-  }
-  requestAnimationFrame(desenharRoleta);
+
+    // <!-- INÍCIO DA ALTERAÇÃO: Remove o texto da roleta -->
+    /*
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(startAngle + (endAngle - startAngle) / 2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 12px Poppins'; // Fonte menor para caber o texto
+    ctx.fillText(segment.label, radius - 15, 5);
+    ctx.restore();
+    */
+    // <!-- FIM DA ALTERAÇÃO -->
+  });
 }
 
-desenharRoleta();
+function girarRoleta() {
+  if (isSpinning) return;
+  
+  Tone.start().then(() => { spinSound.triggerAttackRelease("4n"); });
 
-// Função para girar roleta
-function girar(){
-  if(girando) return;
-  girando = true;
-  const corIndex = Math.floor(Math.random()*4);
-  const membroIndex = Math.floor(Math.random()*4);
-  const giros = Math.floor(Math.random()*4 + 6); // 6 a 9 voltas
-  const anguloFinal = (2*Math.PI*giros) + (3*Math.PI/2 - corIndex*(2*Math.PI/4) - Math.PI/8);
+  isSpinning = true;
+  botaoGirar.disabled = true;
+  btnProxima.disabled = true;
+  perguntaContainer.style.display = 'none';
+  resultado.textContent = 'Girando...';
 
-  const duracao = 4000;
-  const start = performance.now();
+  const randomSpin = Math.floor(Math.random() * 360) + 360 * 5;
+  currentRotation += randomSpin;
 
-  somGiro.play();
+  canvas.style.transition = 'transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)';
+  canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-  function animar(now){
-    const elapsed = now - start;
-    const t = Math.min(elapsed/duracao,1);
-    anguloAtual = anguloAtual + (anguloFinal - anguloAtual)*easeOutCubic(t);
-    if(t<1){
-      requestAnimationFrame(animar);
-    } else {
-      resultado.innerHTML = `Coloque a <strong>${membros[membroIndex]}</strong> na cor <strong>${nomesCores[corIndex]}</strong>`;
-      girando = false;
-      novaPergunta();
-    }
-  }
-
-  requestAnimationFrame(animar);
+  canvas.addEventListener('transitionend', onSpinEnd, { once: true });
 }
 
-function easeOutCubic(t){ return (--t)*t*t+1; }
+function onSpinEnd() {
+  isSpinning = false;
+  
+  const finalAngle = currentRotation % 360;
+  
+  // <!-- ALTERAÇÃO: Corrigido o cálculo do ângulo. -->
+  // A seta está no topo (270 graus), não na direita (0 ou 360).
+  // A lógica anterior era: const winningAngle = (360 - finalAngle) % 360;
+  const winningAngle = (270 - finalAngle + 360) % 360;
+  
+  const winningSegmentIndex = Math.floor(winningAngle / segmentAngle);
+  const winningSegment = segments[winningSegmentIndex];
 
-// Perguntas
-function shuffleArray(array){ return array.sort(()=>Math.random()-0.5); }
+  corSorteadaGlobal = winningSegment.corNome; // Salva o nome da cor (ex: "Vermelho")
+  
+  // <!-- ALTERAÇÃO: Mostrar a cor sorteada, não a categoria -->
+  resultado.textContent = `Cor: ${winningSegment.corNome}!`;
+  
+  mostrarPergunta(winningSegment.label); // Mostra a pergunta da categoria
+}
 
-function novaPergunta(){
-  if(perguntasFeitas>=40){
-    resultado.innerHTML="🎉 Você completou todas as perguntas!";
-    document.getElementById("botaoGirar").disabled=true;
-    document.getElementById("alternativas").innerHTML="";
+function mostrarPergunta(categoryLabel) {
+  if (questionsAnswered >= perguntasTotal) {
+    fimDeJogo();
     return;
   }
 
-  perguntasFeitas++;
-  const p = perguntas[Math.floor(Math.random()*perguntas.length)];
-  perguntaAtual = p;
+  if (availableQuestions[categoryLabel].length === 0) {
+    resultado.textContent = `Sem mais perguntas de ${categoryLabel}. Gire de novo!`;
+    botaoGirar.disabled = false;
+    return;
+  }
 
-  document.getElementById("textoPergunta").textContent = p.pergunta;
-  const altDiv = document.getElementById("alternativas");
-  altDiv.innerHTML = "";
-  altDiv.style.display = "flex";
+  currentQuestion = availableQuestions[categoryLabel].shift();
+  
+  textoPergunta.textContent = currentQuestion.q;
+  alternativas.innerHTML = '';
 
-  shuffleArray(p.alternativas).forEach(a=>{
-    const btn = document.createElement("div");
-    btn.className="alternativa";
-    btn.textContent=a;
-    btn.onclick = ()=>verificarResposta(a);
-    altDiv.appendChild(btn);
+  currentQuestion.a.forEach((alt, index) => {
+    const altDiv = document.createElement('div');
+    altDiv.classList.add('alternativa');
+    altDiv.textContent = alt;
+    altDiv.dataset.index = index;
+    altDiv.addEventListener('click', verificarResposta);
+    alternativas.appendChild(altDiv);
   });
 
-  document.getElementById("perguntasRestantes").textContent = `Perguntas restantes: ${40-perguntasFeitas}`;
+  perguntaContainer.style.display = 'block';
 }
 
-function verificarResposta(a){
-  if(a===perguntaAtual.resposta){
-    resultado.innerHTML="✅ Resposta correta!";
-    acertos++;
-    somCorreto.play();
-  } else{
-    resultado.innerHTML=`❌ Errado! A resposta certa é: ${perguntaAtual.resposta}`;
-    somErro.play();
+/**
+ * Lógica MISTA: Verifica a resposta E GERA O COMANDO DO TWISTER
+ */
+function verificarResposta(e) {
+  const selectedIndex = parseInt(e.target.dataset.index);
+  const correctIndex = currentQuestion.correct;
+  const allButtons = alternativas.querySelectorAll('.alternativa');
+
+  allButtons.forEach(btn => { btn.classList.add('disabled'); });
+
+  if (selectedIndex === correctIndex) {
+    // --- ACERTOU ---
+    e.target.classList.add('correct');
+    correctSound.triggerAttackRelease("C5", "8n", Tone.now());
+    acertosCount++;
+    
+    // Sorteia a parte do corpo
+    const parteSorteada = partesDoCorpo[Math.floor(Math.random() * partesDoCorpo.length)];
+    
+    // Mostra o comando do Twister
+    resultado.textContent = `ACERTOU! ${parteSorteada} no ${corSorteadaGlobal}!`;
+    
+  } else {
+    // --- ERROU ---
+    e.target.classList.add('incorrect');
+    allButtons[correctIndex].classList.add('correct');
+    errorSound.triggerAttackRelease("C3", "8n", Tone.now());
+    
+    // Mostra o resultado "salvo"
+    resultado.textContent = `ERROU! O jogador está salvo nesta rodada.`;
   }
-  document.getElementById("acertos").textContent=`Acertos: ${acertos} ✅`;
-  document.getElementById("botaoGirar").disabled=false;
-  document.getElementById("btnProxima").disabled=true;
-  document.getElementById("alternativas").style.display="none";
+  
+  questionsAnswered++;
+  updateInfo();
+
+  if (questionsAnswered < perguntasTotal) {
+    btnProxima.disabled = false;
+  } else {
+    fimDeJogo();
+  }
 }
 
-document.getElementById("botaoGirar").onclick = girar;
-document.getElementById("btnProxima").onclick = novaPergunta;
+function updateInfo() {
+  acertosEl.textContent = `Pontos: ${acertosCount} ✅`;
+  perguntasRestantesEl.textContent = `Jogadas restantes: ${perguntasTotal - questionsAnswered}`;
+}
 
-novaPergunta();
+function proximaRodada() {
+  perguntaContainer.style.display = 'none';
+  btnProxima.disabled = true;
+  botaoGirar.disabled = false;
+  resultado.textContent = 'Gire a roleta para a próxima jogada!';
+}
+
+function fimDeJogo() {
+    resultado.textContent = `Fim de Jogo! Pontuação final: ${acertosCount} de ${perguntasTotal}!`;
+    perguntaContainer.style.display = 'none';
+    btnProxima.disabled = true;
+    botaoGirar.disabled = true;
+    botaoGirar.textContent = "Recarregue para jogar";
+}
+
+// --- Funções do Modal ---
+function abrirModal() { modalRegras.style.display = 'flex'; }
+function fecharModal() { modalRegras.style.display = 'none'; }
+
+// --- Inicialização ---
+botaoGirar.addEventListener('click', girarRoleta);
+btnProxima.addEventListener('click', proximaRodada);
+btnRegras.addEventListener('click', abrirModal);
+btnFecharModal.addEventListener('click', fecharModal);
+
+modalRegras.addEventListener('click', (e) => {
+  if (e.target === modalRegras) { fecharModal(); }
+});
+
+desenharRoleta();
+updateInfo();
+
+perguntasRestantesEl.textContent = `Jogadas restantes: ${perguntasTotal}`;
 
 
 
