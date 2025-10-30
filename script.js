@@ -79,23 +79,35 @@ function verificarResposta() {
     document.getElementById("textoPergunta").textContent = "✅ Resposta correta! Gire a roleta!";
   } else {
     somErro.play();
-    document.getElementById("textoPergunta").textContent = "❌ Tente novamente!";
+    document.getElementById("textoPergunta").textContent = "❌ Resposta incorreta! Tente novamente!";
   }
 }
 
 function girar() {
   somGiro.play();
+
+  // remove brilhos anteriores
+  document.querySelectorAll(".setor").forEach(s => {
+    s.classList.remove("brilho-vermelho", "brilho-azul", "brilho-verde", "brilho-amarelo");
+  });
+
   const angulo = Math.floor(Math.random() * 3600 + 720);
   roleta.style.transform = `rotate(${angulo}deg)`;
 
   setTimeout(() => {
     const membro = membros[Math.floor(Math.random() * membros.length)];
     const cor = cores[Math.floor(Math.random() * cores.length)];
-    resultado.innerHTML = `👉 <strong>${membro}</strong> no <strong>${cor}</strong>!`;
+
+    // brilho no setor correspondente
+    const setor = document.querySelector(`.${cor}`);
+    if (setor) setor.classList.add(`brilho-${cor}`);
+
+    resultado.innerHTML = `👉 <strong>${membro}</strong> no <strong style="text-transform:capitalize">${cor}</strong>!`;
     novaPergunta();
   }, 4000);
 }
 
 novaPergunta();
+
 
 
