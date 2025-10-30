@@ -1,5 +1,4 @@
- /* === BASE === */
-body {
+ body {
   font-family: 'Nunito', sans-serif;
   background: radial-gradient(circle at top left, #ff5959, #4d79ff, #4dff88);
   background-size: 300% 300%;
@@ -18,7 +17,6 @@ body {
   100% {background-position: 100% 100%;}
 }
 
-/* === HEADER === */
 header {
   text-align: center;
   margin-top: 20px;
@@ -41,7 +39,6 @@ h1 {
   border-radius: 12px;
 }
 
-/* === ROLETA === */
 .roleta-container {
   position: relative;
   margin: 35px 0;
@@ -70,19 +67,18 @@ h1 {
 
 .seta {
   position: absolute;
-  top: 50%;
+  top: -30px;
   left: 50%;
+  transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 60px solid white;
-  transform-origin: bottom center;
-  transform: translate(-50%, -100%) rotate(0deg);
-  transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 50px solid white;
+  filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
+  z-index: 5;
 }
 
-/* === PERGUNTAS === */
 .pergunta {
   background: rgba(255,255,255,0.15);
   padding: 25px;
@@ -131,7 +127,6 @@ button:hover {
   margin: 20px;
 }
 
-/* === FOOTER === */
 footer {
   margin: 30px auto;
   width: 90%;
@@ -157,4 +152,5 @@ footer h3 {
     padding: 20px;
   }
 }
+
 
