@@ -4,15 +4,12 @@ const somErro = document.getElementById("somErro");
 
 const roleta = document.getElementById("roleta");
 const resultado = document.getElementById("resultado");
+const membros = ["Mão direita","Mão esquerda","Pé direito","Pé esquerdo"];
+const cores = ["vermelho","azul","verde","amarelo"];
 
-const membros = ["Mão direita", "Mão esquerda", "Pé direito", "Pé esquerdo"];
-const cores = ["vermelho", "azul", "verde", "amarelo"];
+let perguntaAtual,acertos=0,perguntasFeitas=0;
 
-let perguntaAtual;
-let acertos = 0;
-let perguntasFeitas = 0;
-
-const perguntas = [
+const perguntas=[ // mesmas 40 perguntas
   "Qual é o maior planeta do Sistema Solar?|júpiter",
   "Quem pintou a Mona Lisa?|leonardo da vinci",
   "Qual é a capital da França?|paris",
@@ -53,61 +50,52 @@ const perguntas = [
   "Qual é a cor do sangue humano?|vermelho",
   "Qual é a capital da Itália?|roma",
   "Em que continente fica o Canadá?|américa do norte"
-].map(q => {
-  const [pergunta, resposta] = q.split("|");
-  return { pergunta, resposta };
-});
+].map(q=>{const[p,r]=q.split("|");return{pergunta:p,resposta:r}});
 
-function novaPergunta() {
+function novaPergunta(){
   perguntasFeitas++;
-  const p = perguntas[Math.floor(Math.random() * perguntas.length)];
-  perguntaAtual = p;
-  document.getElementById("textoPergunta").textContent = p.pergunta;
-  document.getElementById("resposta").value = "";
-  document.getElementById("botaoGirar").disabled = true;
-  document.getElementById("perguntasRestantes").textContent =
-    `Perguntas restantes: ${40 - perguntasFeitas}`;
+  const p=perguntas[Math.floor(Math.random()*perguntas.length)];
+  perguntaAtual=p;
+  document.getElementById("textoPergunta").textContent=p.pergunta;
+  document.getElementById("resposta").value="";
+  document.getElementById("botaoGirar").disabled=true;
+  document.getElementById("perguntasRestantes").textContent=`Perguntas restantes: ${40-perguntasFeitas}`;
 }
 
-function verificarResposta() {
-  const resp = document.getElementById("resposta").value.trim().toLowerCase();
-  if (resp === perguntaAtual.resposta) {
+function verificarResposta(){
+  const resp=document.getElementById("resposta").value.trim().toLowerCase();
+  if(resp===perguntaAtual.resposta){
     somCorreto.play();
     acertos++;
-    document.getElementById("acertos").textContent = `Acertos: ${acertos} ✅`;
-    document.getElementById("botaoGirar").disabled = false;
-    document.getElementById("textoPergunta").textContent = "✅ Resposta correta! Gire a roleta!";
-  } else {
+    document.getElementById("acertos").textContent=`Acertos: ${acertos} ✅`;
+    document.getElementById("botaoGirar").disabled=false;
+    document.getElementById("textoPergunta").textContent="✅ Resposta correta! Gire a roleta!";
+  }else{
     somErro.play();
-    document.getElementById("textoPergunta").textContent = "❌ Resposta incorreta! Tente novamente!";
+    document.getElementById("textoPergunta").textContent="❌ Resposta incorreta! Tente novamente!";
   }
 }
 
-function girar() {
+function girar(){
   somGiro.play();
+  document.querySelectorAll(".brilho").forEach(b=>b.className="brilho"); // limpa brilhos
 
-  // remove brilhos anteriores
-  document.querySelectorAll(".brilho-layer").forEach(s => {
-    s.classList.remove("brilho-vermelho", "brilho-azul", "brilho-verde", "brilho-amarelo");
-  });
+  const angulo=Math.floor(Math.random()*3600+720);
+  roleta.style.transform=`rotate(${angulo}deg)`;
 
-  const angulo = Math.floor(Math.random() * 3600 + 720);
-  roleta.style.transform = `rotate(${angulo}deg)`;
+  setTimeout(()=>{
+    const membro=membros[Math.floor(Math.random()*membros.length)];
+    const cor=cores[Math.floor(Math.random()*cores.length)];
+    const brilho=document.querySelector(`.brilho.${cor}`);
+    if(brilho) brilho.classList.add(`brilho-${cor}`);
 
-  setTimeout(() => {
-    const membro = membros[Math.floor(Math.random() * membros.length)];
-    const cor = cores[Math.floor(Math.random() * cores.length)];
-
-    // ativa brilho
-    const layer = document.querySelector(`.brilho-layer.${cor}`);
-    if (layer) layer.classList.add(`brilho-${cor}`);
-
-    resultado.innerHTML = `👉 <strong>${membro}</strong> no <strong style="text-transform:capitalize">${cor}</strong>!`;
+    resultado.innerHTML=`👉 <strong>${membro}</strong> no <strong style="text-transform:capitalize">${cor}</strong>!`;
     novaPergunta();
-  }, 4000);
+  },4000);
 }
 
 novaPergunta();
+
 
 
 
