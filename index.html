@@ -1,63 +1,50 @@
  <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Twister Online Deluxe</title>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Twister Interativo Premium</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🎉 Twister Online Deluxe 🎨</h1>
-    <div class="status">
-      <span id="perguntasRestantes">Perguntas restantes: 40</span>
-      <span id="acertos">Acertos: 0 ✅</span>
+<div class="container">
+  <h1>🎯 Twister Interativo Premium 🎯</h1>
+
+  <div class="roleta-container">
+    <div class="seta"></div>
+    <div class="roleta">
+      <div class="segmento vermelho brilho"></div>
+      <div class="segmento azul brilho"></div>
+      <div class="segmento verde brilho"></div>
+      <div class="segmento amarelo brilho"></div>
     </div>
-  </header>
+  </div>
 
-  <main>
-    <div class="game-area">
-      <div class="roleta-wrapper">
-        <div class="seta"></div>
-        <div class="roleta" id="roleta">
-          <div class="brilho-vermelho brilho"></div>
-          <div class="brilho-azul brilho"></div>
-          <div class="brilho-verde brilho"></div>
-          <div class="brilho-amarelo brilho"></div>
-          <div class="reflexo"></div>
-        </div>
-      </div>
+  <button id="botaoGirar">Girar Roleta</button>
 
-      <div id="resultado"></div>
+  <div id="resultado"></div>
 
-      <div class="pergunta">
-        <p id="textoPergunta"></p>
-        <div id="alternativas"></div>
-        <button id="btnProxima" onclick="novaPergunta()" disabled>Próxima Pergunta</button>
-      </div>
+  <div class="pergunta-container">
+    <p id="textoPergunta"></p>
+    <div id="alternativas"></div>
+  </div>
 
-      <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
-    </div>
-  </main>
+  <div class="info">
+    <p id="acertos">Acertos: 0 ✅</p>
+    <p id="perguntasRestantes">Perguntas restantes: 40</p>
+  </div>
 
-  <footer>
-    <h3>📜 Regras do Twister</h3>
-    <ul>
-      <li>Gire a roleta e siga a cor e o membro indicado.</li>
-      <li>Não apoie cotovelos ou joelhos no tapete.</li>
-      <li>Quem cair está eliminado. O último vence!</li>
-    </ul>
-  </footer>
+  <button id="btnProxima" disabled>Próxima Pergunta</button>
 
-  <audio id="somGiro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c3b0a2a29f.mp3"></audio>
-  <audio id="somCorreto" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cf29c9289.mp3"></audio>
-  <audio id="somErro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d6cc26a14f.mp3"></audio>
+  <!-- Sons -->
+  <audio id="somGiro" src="giro.mp3"></audio>
+  <audio id="somCorreto" src="acerto.mp3"></audio>
+  <audio id="somErro" src="erro.mp3"></audio>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
-
 
 
 
