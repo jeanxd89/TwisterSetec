@@ -1,14 +1,18 @@
- const cores = ["vermelho","azul","verde","amarelo"];
+ const canvas = document.getElementById("roletaCanvas");
+const ctx = canvas.getContext("2d");
+const cores = ["#FF3B3B","#3B7BFF","#3BFF6E","#FFD93B"];
+const nomesCores = ["vermelho","azul","verde","amarelo"];
 const membros = ["Mão direita","Mão esquerda","Pé direito","Pé esquerdo"];
-const roleta = document.querySelector(".roleta");
 const resultado = document.getElementById("resultado");
 const somGiro = document.getElementById("somGiro");
 const somCorreto = document.getElementById("somCorreto");
 const somErro = document.getElementById("somErro");
 
-let perguntasFeitas = 0;
 let acertos = 0;
+let perguntasFeitas = 0;
 let perguntaAtual = null;
+let girando = false;
+let anguloAtual = 0;
 
 // 40 perguntas
 const perguntas = [
@@ -22,19 +26,74 @@ const perguntas = [
   {pergunta:"Qual a velocidade da luz?",resposta:"299.792 km/s",alternativas:["299.792 km/s","150.000 km/s","1.000.000 km/s","300.000 km/s"]},
   {pergunta:"Qual país é famoso pelos samurais?",resposta:"Japão",alternativas:["Japão","China","Coreia","Tailândia"]},
   {pergunta:"Qual é a capital da Itália?",resposta:"Roma",alternativas:["Roma","Milão","Florença","Veneza"]},
-  {pergunta:"Quem descobriu a gravidade?",resposta:"Isaac Newton",alternativas:["Isaac Newton","Galileu","Einstein","Aristóteles"]},
-  {pergunta:"Qual é o maior lago do mundo?",resposta:"Mar Cáspio",alternativas:["Mar Cáspio","Lago Vitória","Lago Superior","Lago Baikal"]},
-  {pergunta:"Qual animal é símbolo da Austrália?",resposta:"Canguru",alternativas:["Canguru","Coala","Dingo","Emu"]},
-  {pergunta:"Qual é a menor unidade de vida?",resposta:"Célula",alternativas:["Célula","Molécula","Átomo","Organelo"]},
-  {pergunta:"Qual é a língua oficial do Brasil?",resposta:"Português",alternativas:["Português","Espanhol","Inglês","Francês"]},
-  {pergunta:"Quem pintou O Grito?",resposta:"Edvard Munch",alternativas:["Edvard Munch","Van Gogh","Picasso","Monet"]},
-  {pergunta:"Qual é o planeta com anéis visíveis?",resposta:"Saturno",alternativas:["Saturno","Júpiter","Urano","Netuno"]},
-  {pergunta:"Qual é o menor osso do corpo humano?",resposta:"Estribo",alternativas:["Fêmur","Tíbia","Esterno","Estribo"]},
-  {pergunta:"Quem escreveu O Pequeno Príncipe?",resposta:"Antoine de Saint-Exupéry",alternativas:["Antoine de Saint-Exupéry","J.K. Rowling","Hans Christian Andersen","Roald Dahl"]},
-  {pergunta:"Qual continente é chamado de Velho Mundo?",resposta:"Europa",alternativas:["Europa","África","Ásia","América"]},
   // ... adicione mais até 40 perguntas
 ];
 
+// Função para desenhar roleta com efeito de iluminação animada
+function desenharRoleta(){
+  const raio = canvas.width/2;
+  const centro = raio;
+  const total = cores.length;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for(let i=0;i<total;i++){
+    const inicio = (i*(2*Math.PI/total)) + anguloAtual;
+    const fim = ((i+1)*(2*Math.PI/total)) + anguloAtual;
+
+    // Gradiente radial para dar efeito de iluminação
+    let grad = ctx.createRadialGradient(centro,centro,0,centro,centro,raio);
+    grad.addColorStop(0,'#fff');
+    grad.addColorStop(0.3, cores[i]);
+    grad.addColorStop(1, '#000');
+    
+    ctx.beginPath();
+    ctx.moveTo(centro,centro);
+    ctx.arc(centro,centro,raio,inicio,fim);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+  requestAnimationFrame(desenharRoleta);
+}
+
+desenharRoleta();
+
+// Função para girar roleta
+function girar(){
+  if(girando) return;
+  girando = true;
+  const corIndex = Math.floor(Math.random()*4);
+  const membroIndex = Math.floor(Math.random()*4);
+  const giros = Math.floor(Math.random()*4 + 6); // 6 a 9 voltas
+  const anguloFinal = (2*Math.PI*giros) + (3*Math.PI/2 - corIndex*(2*Math.PI/4) - Math.PI/8);
+
+  const duracao = 4000;
+  const start = performance.now();
+
+  somGiro.play();
+
+  function animar(now){
+    const elapsed = now - start;
+    const t = Math.min(elapsed/duracao,1);
+    anguloAtual = anguloAtual + (anguloFinal - anguloAtual)*easeOutCubic(t);
+    if(t<1){
+      requestAnimationFrame(animar);
+    } else {
+      resultado.innerHTML = `Coloque a <strong>${membros[membroIndex]}</strong> na cor <strong>${nomesCores[corIndex]}</strong>`;
+      girando = false;
+      novaPergunta();
+    }
+  }
+
+  requestAnimationFrame(animar);
+}
+
+function easeOutCubic(t){ return (--t)*t*t+1; }
+
+// Perguntas
 function shuffleArray(array){ return array.sort(()=>Math.random()-0.5); }
 
 function novaPergunta(){
@@ -77,7 +136,13 @@ function verificarResposta(a){
   document.getElementById("acertos").textContent=`Acertos: ${acertos} ✅`;
   document.getElementById("botaoGirar").disabled=false;
   document.getElementById("btnProxima").disabled=true;
-  document.querySelectorAll('.brilho-overlay').forEach(b=>b.classList.remove('active'));
+  document.getElementById("alternativas").style.display="none";
+}
+
+document.getElementById("botaoGirar").onclick = girar;
+document.getElementById("btnProxima").onclick = novaPergunta;
+
+novaPergunta();
 
 
 
