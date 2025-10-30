@@ -1,10 +1,8 @@
  const somGiro = document.getElementById("somGiro");
 const somCorreto = document.getElementById("somCorreto");
 const somErro = document.getElementById("somErro");
-const somClique = document.getElementById("somClique");
 
 const roleta = document.getElementById("roleta");
-const seta = document.getElementById("seta");
 const resultado = document.getElementById("resultado");
 
 const membros = ["Mão direita", "Mão esquerda", "Pé direito", "Pé esquerdo"];
@@ -67,13 +65,11 @@ function novaPergunta() {
   document.getElementById("textoPergunta").textContent = p.pergunta;
   document.getElementById("resposta").value = "";
   document.getElementById("botaoGirar").disabled = true;
-
   document.getElementById("perguntasRestantes").textContent =
     `Perguntas restantes: ${40 - perguntasFeitas}`;
 }
 
 function verificarResposta() {
-  somClique.play();
   const resp = document.getElementById("resposta").value.trim().toLowerCase();
   if (resp === perguntaAtual.resposta) {
     somCorreto.play();
@@ -91,7 +87,6 @@ function girar() {
   somGiro.play();
   const angulo = Math.floor(Math.random() * 3600 + 720);
   roleta.style.transform = `rotate(${angulo}deg)`;
-  seta.style.transform = `translate(-50%, -100%) rotate(${angulo}deg)`;
 
   setTimeout(() => {
     const membro = membros[Math.floor(Math.random() * membros.length)];
