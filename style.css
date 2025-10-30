@@ -1,73 +1,91 @@
- body {
+ /* === BASE DO SITE (sem alterações grandes) === */
+body {
   font-family: 'Nunito', sans-serif;
-  background: radial-gradient(circle at top left, #ff5959, #4d79ff, #4dff88);
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
   background-size: 300% 300%;
-  animation: movebg 12s infinite alternate;
+  animation: bgmove 15s infinite alternate;
+  color: white;
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0;
-  color: white;
-  overflow-x: hidden;
+  justify-content: flex-start;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
-@keyframes movebg {
-  0% {background-position: 0% 0%;}
-  100% {background-position: 100% 100%;}
+@keyframes bgmove {
+  0% {background-position: left top;}
+  100% {background-position: right bottom;}
 }
 
 header {
   text-align: center;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 h1 {
   font-family: 'Baloo 2', cursive;
   font-size: 2.8em;
-  text-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+  text-shadow: 3px 3px 8px rgba(0,0,0,0.4);
 }
 
 .status {
-  margin-top: 10px;
   display: flex;
   justify-content: center;
-  gap: 20px;
-  font-size: 1em;
+  gap: 25px;
   background: rgba(0,0,0,0.3);
-  padding: 10px 20px;
-  border-radius: 12px;
+  padding: 10px 25px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 1.1em;
 }
 
-.roleta-container {
+/* === ÁREA DO JOGO === */
+.game-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+/* === ROLETA === */
+.roleta-wrapper {
   position: relative;
-  margin: 35px 0;
-  width: 90vw;
-  max-width: 360px;
-  perspective: 800px;
+  width: 300px;
+  height: 300px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .roleta {
+  position: relative;
   width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
   border-radius: 50%;
   border: 10px solid #fff;
-  background: conic-gradient(
-    red 0deg 90deg,
-    blue 90deg 180deg,
-    green 180deg 270deg,
-    yellow 270deg 360deg
-  );
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+.setor {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  transform-origin: 100% 100%;
+}
+
+.vermelho { background: red; transform: rotate(0deg) skewY(-30deg); }
+.azul { background: blue; transform: rotate(90deg) skewY(-30deg); }
+.verde { background: green; transform: rotate(180deg) skewY(-30deg); }
+.amarelo { background: yellow; transform: rotate(270deg) skewY(-30deg); }
+
 .seta {
   position: absolute;
-  top: -30px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
@@ -75,82 +93,101 @@ h1 {
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   border-bottom: 50px solid white;
-  filter: drop-shadow(0 0 6px rgba(0,0,0,0.4));
-  z-index: 5;
+  z-index: 10;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6));
+}
+
+/* === ILUMINAÇÃO ANIMADA === */
+@keyframes brilhoPulse {
+  0% { box-shadow: 0 0 10px 2px rgba(255,255,255,0.5); }
+  50% { box-shadow: 0 0 35px 15px rgba(255,255,255,0.9); }
+  100% { box-shadow: 0 0 10px 2px rgba(255,255,255,0.5); }
+}
+
+.brilho-vermelho { animation: brilhoPulse 1s infinite; box-shadow: 0 0 25px 10px red; z-index: 2; }
+.brilho-azul { animation: brilhoPulse 1s infinite; box-shadow: 0 0 25px 10px blue; z-index: 2; }
+.brilho-verde { animation: brilhoPulse 1s infinite; box-shadow: 0 0 25px 10px green; z-index: 2; }
+.brilho-amarelo { animation: brilhoPulse 1s infinite; box-shadow: 0 0 25px 10px yellow; z-index: 2; }
+
+/* === OUTROS ELEMENTOS === */
+#resultado {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 20px 0;
+  text-align: center;
+  text-shadow: 2px 2px 8px #000;
 }
 
 .pergunta {
   background: rgba(255,255,255,0.15);
-  padding: 25px;
   border-radius: 15px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  margin-top: 15px;
-  text-align: center;
+}
+
+.pergunta p {
+  font-size: 1.1em;
 }
 
 .pergunta input {
+  width: 85%;
   padding: 12px;
-  width: 90%;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  text-align: center;
+  margin-top: 15px;
   font-size: 1em;
-  margin-top: 10px;
+  text-align: center;
 }
 
 button {
-  background-color: #fff;
+  background: #fff;
   color: #333;
+  font-family: 'Baloo 2', cursive;
   font-weight: bold;
+  padding: 15px 25px;
   border: none;
   border-radius: 12px;
-  padding: 15px 25px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   margin-top: 20px;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1.2em;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  font-family: 'Baloo 2', cursive;
 }
 
 button:hover {
-  background-color: #ffcc00;
+  background: #ffde59;
   transform: scale(1.05);
 }
 
-#resultado {
-  font-size: 1.6em;
-  font-weight: bold;
-  text-shadow: 2px 2px 6px #000;
-  margin: 20px;
-}
-
 footer {
-  margin: 30px auto;
-  width: 90%;
-  max-width: 550px;
+  margin-top: 50px;
   background: rgba(0,0,0,0.3);
-  padding: 15px;
   border-radius: 10px;
-  font-size: 0.95em;
+  padding: 20px;
+  max-width: 500px;
+  text-align: left;
+  font-size: 1em;
+  line-height: 1.5em;
 }
 
 footer h3 {
-  margin-top: 0;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
+/* === MOBILE === */
 @media (max-width: 600px) {
-  h1 {
-    font-size: 2.2em;
+  .roleta-wrapper {
+    width: 240px;
+    height: 240px;
   }
-  button {
-    width: 80%;
-  }
-  .pergunta {
-    padding: 20px;
-  }
+  h1 { font-size: 2em; }
+  button { width: 80%; }
+  .status { flex-direction: column; gap: 10px; }
 }
+
 
 
