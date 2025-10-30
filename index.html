@@ -1,14 +1,13 @@
  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Twister Online Deluxe</title>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header>
     <h1>🎉 Twister Online Deluxe 🎨</h1>
     <div class="status">
@@ -19,15 +18,14 @@
 
   <main>
     <div class="game-area">
-
-      <!-- ROLETA -->
       <div class="roleta-wrapper">
-        <div class="seta" id="seta"></div>
+        <div class="seta"></div>
         <div class="roleta" id="roleta">
-          <div class="brilho-layer vermelho"></div>
-          <div class="brilho-layer azul"></div>
-          <div class="brilho-layer verde"></div>
-          <div class="brilho-layer amarelo"></div>
+          <!-- camadas de brilho -->
+          <div class="brilho vermelho"></div>
+          <div class="brilho azul"></div>
+          <div class="brilho verde"></div>
+          <div class="brilho amarelo"></div>
         </div>
       </div>
 
@@ -35,12 +33,11 @@
 
       <div class="pergunta">
         <p id="textoPergunta"></p>
-        <input type="text" id="resposta" placeholder="Digite sua resposta..." />
+        <input id="resposta" placeholder="Digite sua resposta...">
         <button id="btnResponder" onclick="verificarResposta()">Responder</button>
       </div>
 
       <button id="botaoGirar" onclick="girar()" disabled>🎲 Girar Roleta</button>
-
     </div>
   </main>
 
@@ -53,7 +50,7 @@
     </ul>
   </footer>
 
-  <!-- Sons -->
+  <!-- sons -->
   <audio id="somGiro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c3b0a2a29f.mp3"></audio>
   <audio id="somCorreto" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cf29c9289.mp3"></audio>
   <audio id="somErro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d6cc26a14f.mp3"></audio>
@@ -61,6 +58,7 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
