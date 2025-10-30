@@ -1,209 +1,47 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Twister Quiz</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twister Online</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Header -->
-        <header class="game-header">
-            <h1 class="game-title">Twister Quiz</h1>
-            <p class="game-subtitle">Responda corretamente e gire a roleta!</p>
-            
-            <div class="game-info">
-                <div class="info-item">
-                    <span class="info-label">Acesso</span>
-                    <span class="info-value">4</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Tipo</span>
-                    <span class="info-value">Textativa</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Rodada</span>
-                    <span class="info-value">6</span>
-                </div>
-            </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="game-content">
-            <!-- Question Section -->
-            <section class="question-section">
-                <h2>Pergunta</h2>
-                <div class="question-card">
-                    <p class="question-text">Quantos continentes existem no mundo?</p>
-                    
-                    <div class="options">
-                        <div class="option">
-                            <input type="radio" id="option1" name="quiz" value="5">
-                            <label for="option1">5</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="option2" name="quiz" value="6">
-                            <label for="option2">6</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="option3" name="quiz" value="7">
-                            <label for="option3">7</label>
-                        </div>
-                        <div class="option">
-                            <input type="radio" id="option4" name="quiz" value="8">
-                            <label for="option4">8</label>
-                        </div>
-                    </div>
-                    
-                    <button class="submit-btn" onclick="checkAnswer()">Confirmar Resposta</button>
-                </div>
-            </section>
+  <h1>🎉 Twister Online 🎨</h1>
 
-            <!-- Twister Section -->
-            <section class="twister-section">
-                <div class="twister-instruction">
-                    <h3>Pé Direito - Azul</h3>
-                    <p>Acerte uma pergunta para girar!</p>
-                </div>
-                
-                <div class="wheel-container">
-                    <div class="wheel" id="twister-wheel">
-                        <div class="wheel-center"></div>
-                        <div class="pointer"></div>
-                        <!-- Segmentos da roleta -->
-                        <div class="segment red"></div>
-                        <div class="segment blue"></div>
-                        <div class="segment green"></div>
-                        <div class="segment yellow"></div>
-                        <div class="segment purple"></div>
-                        <div class="segment orange"></div>
-                    </div>
-                </div>
-                
-                <button class="spin-btn" id="spin-btn" onclick="spinWheel()" disabled>Girar Roleta</button>
-                
-                <div class="result-display" id="result-display">
-                    <p>Coloque o <span class="body-part">Pé Direito</span> no círculo <span class="color">Azul</span>!</p>
-                </div>
-            </section>
+  <div class="roleta-container">
+    <div class="seta"></div>
+    <div class="roleta" id="roleta"></div>
+  </div>
 
-            <!-- Game Rules -->
-            <section class="rules-section">
-                <h3>Regras do Jogo</h3>
-                <div class="rules-content">
-                    <div class="rule-item">
-                        <h4>🎯 Como Jogar</h4>
-                        <p>Gire a roleta e movimente-se. Os jogadores devem mover a mão ou o pé até a cor tirada na roleta o mais rápido possível.</p>
-                    </div>
-                    
-                    <div class="rule-item">
-                        <h4>❌ Eliminação</h4>
-                        <p>Caso o seu joelho ou seu cotovelo toquem o tapete, ou se você cair, você está fora!</p>
-                    </div>
-                    
-                    <div class="rule-item">
-                        <h4>🏆 Vitória</h4>
-                        <p>O último jogador que ficar é o vencedor!</p>
-                    </div>
-                    
-                    <div class="rule-item">
-                        <h4>📝 Regras Importantes</h4>
-                        <ul>
-                            <li>Coloque apenas uma mão ou um pé em cada círculo</li>
-                            <li>O primeiro jogador que tocar um espaço tem direito a ele</li>
-                            <li>Não pode se mexer depois de se posicionar</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </main>
+  <div id="resultado"></div>
 
-        <!-- Footer -->
-        <footer class="game-footer">
-            <p>Quando o direito é obrigado, 10:23</p>
-            <p>Twister Quiz © 2024 - Todos os direitos reservados</p>
-        </footer>
-    </div>
+  <div class="pergunta" id="pergunta">
+    <p id="textoPergunta"></p>
+    <input type="text" id="resposta" placeholder="Digite sua resposta">
+    <button onclick="verificarResposta()">Responder</button>
+  </div>
 
-    <script>
-        function checkAnswer() {
-            const selectedOption = document.querySelector('input[name="quiz"]:checked');
-            const spinBtn = document.getElementById('spin-btn');
-            const resultDisplay = document.getElementById('result-display');
-            
-            if (!selectedOption) {
-                alert('Por favor, selecione uma resposta!');
-                return;
-            }
-            
-            if (selectedOption.value === '7') {
-                alert('🎉 Resposta Correta! Agora você pode girar a roleta.');
-                spinBtn.disabled = false;
-                resultDisplay.style.display = 'block';
-            } else {
-                alert('❌ Resposta Incorreta! Tente novamente.');
-                // Limpa a seleção
-                selectedOption.checked = false;
-            }
-        }
-        
-        function spinWheel() {
-            const wheel = document.getElementById('twister-wheel');
-            const spinBtn = document.getElementById('spin-btn');
-            const resultDisplay = document.getElementById('result-display');
-            
-            // Desativa o botão durante o giro
-            spinBtn.disabled = true;
-            
-            // Gira a roleta
-            const extraRotation = 360 * 5; // 5 voltas completas
-            const segmentAngle = 60; // Cada segmento tem 60 graus
-            const randomSegment = Math.floor(Math.random() * 6); // 0 a 5
-            
-            // Calcula o ângulo final
-            const finalRotation = extraRotation + (randomSegment * segmentAngle);
-            
-            // Aplica a rotação
-            wheel.style.transform = `rotate(${-finalRotation}deg)`;
-            
-            // Define cores e partes do corpo
-            const colors = ['Vermelho', 'Azul', 'Verde', 'Amarelo', 'Roxo', 'Laranja'];
-            const bodyParts = ['Mão Direita', 'Mão Esquerda', 'Pé Direito', 'Pé Esquerdo'];
-            
-            const selectedColor = colors[randomSegment];
-            const selectedBodyPart = bodyParts[Math.floor(Math.random() * bodyParts.length)];
-            
-            // Atualiza o resultado
-            setTimeout(() => {
-                resultDisplay.innerHTML = `
-                    <p>Coloque o <span class="body-part">${selectedBodyPart}</span> no círculo <span class="color">${selectedColor}</span>!</p>
-                `;
-                resultDisplay.style.display = 'block';
-                
-                // Prepara para próxima rodada
-                setTimeout(() => {
-                    // Reseta a roleta
-                    wheel.style.transition = 'none';
-                    wheel.style.transform = 'rotate(0deg)';
-                    setTimeout(() => {
-                        wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
-                    }, 50);
-                    
-                    // Limpa seleções
-                    document.querySelectorAll('input[name="quiz"]').forEach(input => {
-                        input.checked = false;
-                    });
-                    spinBtn.disabled = true;
-                }, 3000);
-            }, 3000);
-        }
-        
-        // Adiciona transição à roleta após carregamento
-        document.addEventListener('DOMContentLoaded', function() {
-            const wheel = document.getElementById('twister-wheel');
-            wheel.style.transition = 'transform 3s cubic-bezier(0.2, 0.8, 0.3, 1)';
-        });
-    </script>
+  <button id="botaoGirar" onclick="girar()" disabled>Girar Roleta 🎲</button>
+
+  <div class="regras">
+    <h3>📜 Regras do Twister:</h3>
+    <ul>
+      <li>Um jogador gira a roleta e anuncia o resultado (Ex: “Mão direita no vermelho”).</li>
+      <li>Os jogadores colocam o membro indicado sobre a cor sorteada.</li>
+      <li>Não é permitido apoiar o cotovelo ou o joelho no tapete.</li>
+      <li>Quem cair ou apoiar outra parte do corpo é eliminado.</li>
+      <li>O último jogador em pé vence!</li>
+    </ul>
+  </div>
+
+  <!-- Áudios -->
+  <audio id="somGiro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_c3b0a2a29f.mp3"></audio>
+  <audio id="somCorreto" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4cf29c9289.mp3"></audio>
+  <audio id="somErro" src="https://cdn.pixabay.com/audio/2022/03/15/audio_d6cc26a14f.mp3"></audio>
+
+  <script src="script.js"></script>
 </body>
 </html>
+
