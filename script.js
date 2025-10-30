@@ -87,7 +87,7 @@ function girar() {
   somGiro.play();
 
   // remove brilhos anteriores
-  document.querySelectorAll(".setor").forEach(s => {
+  document.querySelectorAll(".brilho-layer").forEach(s => {
     s.classList.remove("brilho-vermelho", "brilho-azul", "brilho-verde", "brilho-amarelo");
   });
 
@@ -98,9 +98,9 @@ function girar() {
     const membro = membros[Math.floor(Math.random() * membros.length)];
     const cor = cores[Math.floor(Math.random() * cores.length)];
 
-    // brilho no setor correspondente
-    const setor = document.querySelector(`.${cor}`);
-    if (setor) setor.classList.add(`brilho-${cor}`);
+    // ativa brilho
+    const layer = document.querySelector(`.brilho-layer.${cor}`);
+    if (layer) layer.classList.add(`brilho-${cor}`);
 
     resultado.innerHTML = `👉 <strong>${membro}</strong> no <strong style="text-transform:capitalize">${cor}</strong>!`;
     novaPergunta();
@@ -108,6 +108,7 @@ function girar() {
 }
 
 novaPergunta();
+
 
 
 
