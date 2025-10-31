@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Twister Quiz Challenge</title>
+  
+  <!-- Importa a biblioteca de som Tone.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  
+  <!-- Importa o arquivo CSS externo -->
+  <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
+  <div class="container">
+    <h1>🎯 Twister Quiz Challenge 🎯</h1>
+
+    <div class="roleta-container">
+      <div class="seta"></div>
+      <canvas id="roletaCanvas" width="300" height="300"></canvas>
+    </div>
+
+    <div class="botoes-acao">
+      <button id="botaoGirar">Girar Roleta</button>
+    </div>
+
+    <div id="resultado">Gire a roleta para começar!</div>
+
+    <div class="pergunta-container" id="perguntaContainer">
+      <p id="textoPergunta"></p>
+      <div id="alternativas"></div>
+    </div>
+
+    <div class="info">
+      <p id="acertos">Pontos: 0 ✅</p>
+      <p id="perguntasRestantes">Jogadas restantes: 32</p>
+    </div>
+
+    <button id="btnProxima" disabled>Próxima Jogada</button>
+  </div>
+
+  <!-- Importa o arquivo JavaScript externo como um módulo -->
+  <script src="script.js" type="module"></script>
+</body>
+</html>
