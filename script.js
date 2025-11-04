@@ -1,4 +1,4 @@
- const canvas = document.getElementById("roletaCanvas");
+const canvas = document.getElementById("roletaCanvas");
 const ctx = canvas.getContext("2d");
 const botaoGirar = document.getElementById("botaoGirar");
 const btnProxima = document.getElementById("btnProxima");
@@ -34,18 +34,61 @@ const partesDoCorpo = ["Mão Direita", "Mão Esquerda", "Pé Direito", "Pé Esqu
 
 const questionBank = {
   "Ciência e Natureza": [
-    { q: "Qual planeta é conhecido como 'Planeta Vermelho'?", a: ["Júpiter", "Marte", "Vênus"], correct: 1 },
-    { q: "Qual é o símbolo químico da água?", a: ["H2O", "CO2", "O2"], correct: 0 },
+    { q: "Qual é o maior planeta do sistema solar?", a: ["Saturno", "Júpiter", "Terra"], correct: 1 },
+    { q: "Quantos elementos tem a tabela periódica?", a: ["118", "92", "150"], correct: 0 },
+    { q: "Qual é o metal líquido à temperatura ambiente?", a: ["Ferro", "Mercúrio", "Ouro"], correct: 1 },
+    { q: "Que animal é conhecido como 'rei da selva'?", a: ["Tigre", "Leão", "Elefante"], correct: 1 },
+    { q: "Qual é o processo das plantas produzirem alimento?", a: ["Respiração", "Fotossíntese", "Digestão"], correct: 1 },
+    { q: "Quantos ossos tem o corpo humano adulto?", a: ["206", "300", "150"], correct: 0 },
+    { q: "Qual é o maior mamífero terrestre?", a: ["Urso polar", "Elefante africano", "Girafa"], correct: 1 },
+    { q: "Que gás é liberado pelas plantas durante a fotossíntese?", a: ["Dióxido de carbono", "Oxigênio", "Nitrogênio"], correct: 1 },
+    { q: "Qual é o planeta mais próximo do Sol?", a: ["Vênus", "Terra", "Mercúrio"], correct: 2 },
+    { q: "Que parte da célula é chamada de 'usina de energia'?", a: ["Núcleo", "Mitocôndria", "Ribossomo"], correct: 1 },
+    { q: "Quantos litros de sangue tem o corpo humano adulto?", a: ["5-6 litros", "2-3 litros", "10-12 litros"], correct: 0 },
+    { q: "Qual é o animal mais rápido do mundo?", a: ["Leopardo", "Guepardo", "Águia"], correct: 1 },
+    { q: "Que planeta tem anéis visíveis?", a: ["Júpiter", "Saturno", "Urano"], correct: 1 }
   ],
   "Geografia": [
-    { q: "Qual é o maior continente do mundo?", a: ["Ásia", "África", "América"], correct: 0 },
-    { q: "Onde fica a Torre Eiffel?", a: ["Londres", "Berlim", "Paris"], correct: 2 },
+    { q: "Qual é o maior país do mundo em área territorial?", a: ["China", "Rússia", "Canadá"], correct: 1 },
+    { q: "Qual é o rio mais longo do mundo?", a: ["Amazonas", "Nilo", "Yangtzé"], correct: 0 },
+    { q: "Em qual continente fica o Deserto do Saara?", a: ["Ásia", "África", "América do Sul"], correct: 1 },
+    { q: "Qual é a capital da Austrália?", a: ["Sydney", "Melbourne", "Canberra"], correct: 2 },
+    { q: "Quantos estados tem o Brasil?", a: ["26", "27", "25"], correct: 1 },
+    { q: "Qual é a montanha mais alta do mundo?", a: ["K2", "Monte Everest", "Mont Blanc"], correct: 1 },
+    { q: "Qual país tem formato de bota?", a: ["França", "Itália", "Espanha"], correct: 1 },
+    { q: "Qual é o menor país do mundo?", a: ["Mônaco", "Vaticano", "San Marino"], correct: 1 },
+    { q: "Qual é o maior oceano do mundo?", a: ["Atlântico", "Índico", "Pacífico"], correct: 2 },
+    { q: "Que cidade é conhecida como 'Big Apple'?", a: ["Los Angeles", "Nova York", "Chicago"], correct: 1 },
+    { q: "Qual é a capital do Canadá?", a: ["Toronto", "Vancouver", "Ottawa"], correct: 2 },
+    { q: "Em que continente fica o Egito?", a: ["Ásia", "África", "Europa"], correct: 1 }
   ],
   "Arte e Cultura": [
-    { q: "Quem pintou a 'Mona Lisa'?", a: ["Michelangelo", "Leonardo da Vinci", "Donatello"], correct: 1 },
+    { q: "Quem pintou 'A Noite Estrelada'?", a: ["Picasso", "Van Gogh", "Monet"], correct: 1 },
+    { q: "Qual instrumento musical tem 88 teclas?", a: ["Violino", "Piano", "Harpa"], correct: 1 },
+    { q: "Quem escreveu 'Dom Quixote'?", a: ["Miguel de Cervantes", "William Shakespeare", "Machado de Assis"], correct: 0 },
+    { q: "Qual é a sétima arte?", a: ["Pintura", "Cinema", "Música"], correct: 1 },
+    { q: "Quem compôs 'Para Elisa'?", a: ["Mozart", "Beethoven", "Bach"], correct: 1 },
+    { q: "Qual destes é um estilo de dança brasileira?", a: ["Flamenco", "Samba", "Tango"], correct: 1 },
+    { q: "Quem escreveu 'Romeu e Julieta'?", a: ["Charles Dickens", "William Shakespeare", "Jane Austen"], correct: 1 },
+    { q: "Qual pintor cortou a própria orelha?", a: ["Picasso", "Van Gogh", "Monet"], correct: 1 },
+    { q: "Qual é o museu mais visitado do mundo?", a: ["British Museum", "Louvre", "Metropolitan"], correct: 1 },
+    { q: "Que obra tem o personagem Hamlet?", a: ["Macbeth", "Hamlet", "Otelo"], correct: 1 },
+    { q: "Qual destes é um instrumento de sopro?", a: ["Violoncelo", "Flauta", "Guitarra"], correct: 1 },
+    { q: "Em que país nasceu o tango?", a: ["Brasil", "Argentina", "México"], correct: 1 }
   ],
   "Esportes e Entretenimento": [
-    { q: "Quem é conhecido como 'O Rei do Futebol'?", a: ["Maradona", "Messi", "Pelé"], correct: 2 },
+    { q: "Quantos jogadores tem um time de vôlei?", a: ["5 jogadores", "6 jogadores", "7 jogadores"], correct: 1 },
+    { q: "Que esporte é conhecido como 'rei dos esportes'?", a: ["Futebol", "Basquete", "Tênis"], correct: 0 },
+    { q: "Qual filme ganhou o Oscar de Melhor Filme em 2020?", a: ["Parasita", "1917", "Coringa"], correct: 0 },
+    { q: "Quantos rounds tem uma luta de boxe profissional?", a: ["10 rounds", "12 rounds", "15 rounds"], correct: 1 },
+    { q: "Que atriz interpretou Hermione em Harry Potter?", a: ["Emma Stone", "Emma Watson", "Emma Roberts"], correct: 1 },
+    { q: "Qual é o esporte mais popular do mundo?", a: ["Basquete", "Futebol", "Críquete"], correct: 1 },
+    { q: "Quantos anéis tem o símbolo olímpico?", a: ["4", "5", "6"], correct: 1 },
+    { q: "Que série tem as casas Stark e Lannister?", a: ["The Witcher", "Game of Thrones", "Vikings"], correct: 1 },
+    { q: "Qual nadador ganhou mais medalhas olímpicas?", a: ["Michael Phelps", "Mark Spitz", "Ian Thorpe"], correct: 0 },
+    { q: "Que filme tem o personagem Tony Stark?", a: ["Homem-Aranha", "Homem de Ferro", "Capitão América"], correct: 1 },
+    { q: "Quantos jogadores tem um time de basquete em quadra?", a: ["5", "6", "7"], correct: 0 },
+    { q: "Qual cantora é conhecida como 'Rainha do Pop'?", a: ["Beyoncé", "Madonna", "Lady Gaga"], correct: 1 }
   ]
 };
 
@@ -202,8 +245,6 @@ btnProxima.addEventListener("click", proximaRodada);
 
 desenharRoleta();
 updateInfo();
-
-
 
 
 
