@@ -1,58 +1,293 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 Twister Quiz Challenge</title>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roleta do Twister - Versão Perguntas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .roleta-container {
+            position: relative;
+            margin: 20px auto;
+            width: 300px;
+            height: 300px;
+        }
+
+        #roletaCanvas {
+            width: 100%;
+            height: 100%;
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            border: 8px solid #333;
+            border-radius: 50%;
+        }
+
+        .ponteiro {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #333;
+            z-index: 10;
+        }
+
+        .controles {
+            margin: 20px 0;
+        }
+
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        #resultado {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 3px dashed #4ecdc4;
+        }
+
+        .pergunta-container {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #2196f3;
+        }
+
+        #textoPergunta {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .alternativas {
+            display: grid;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .alternativa {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #ddd;
+            font-size: 1.1em;
+        }
+
+        .alternativa:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: scale(1.02);
+        }
+
+        .alternativa.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+
+        .alternativa.incorrect {
+            background: #ffcdd2;
+            border-color: #f44336;
+            color: #c62828;
+        }
+
+        .alternativa.disabled {
+            cursor: not-allowed;
+        }
+
+        .info-jogo {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .info-item {
+            background: #ffeaa7;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #fdcb6e;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .modal ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .modal li {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
+        .partes-corpo {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .parte-corpo {
+            background: #a29bfe;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        @keyframes confetti {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(500px) rotate(360deg); }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti 2s linear forwards;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🎯 Twister Quiz Challenge 🎯</h1>
+    <div class="container">
+        <h1>🎪 Roleta do Twister 🎪</h1>
+        
+        <div class="roleta-container">
+            <div class="ponteiro"></div>
+            <canvas id="roletaCanvas" width="300" height="300"></canvas>
+        </div>
 
-    <div class="roleta-container">
-      <div class="seta"></div>
-      <canvas id="roletaCanvas" width="320" height="320"></canvas>
+        <div class="controles">
+            <button id="botaoGirar">🎯 Girar Roleta</button>
+            <button id="btnProxima" disabled>➡️ Próxima Rodada</button>
+            <button id="btnRegras">📖 Regras do Jogo</button>
+        </div>
+
+        <div id="resultado">Gire a roleta para começar!</div>
+
+        <div class="info-jogo">
+            <div class="info-item" id="acertos">Pontos: 0 ✅</div>
+            <div class="info-item" id="perguntasRestantes">Jogadas: 10</div>
+        </div>
+
+        <div class="partes-corpo">
+            <div class="parte-corpo">Mão Direita</div>
+            <div class="parte-corpo">Mão Esquerda</div>
+            <div class="parte-corpo">Pé Direito</div>
+            <div class="parte-corpo">Pé Esquerdo</div>
+        </div>
+
+        <div class="pergunta-container" id="perguntaContainer" style="display: none;">
+            <div id="textoPergunta"></div>
+            <div class="alternativas" id="alternativas"></div>
+        </div>
     </div>
 
-    <div class="botoes-acao">
-      <button id="botaoGirar">Girar Roleta</button>
-      <button id="btnRegras">Regras</button>
+    <div class="modal" id="modalRegras">
+        <div class="modal-content">
+            <h2>📋 Regras do Jogo</h2>
+            <ul>
+                <li>🎯 Clique em "Girar Roleta" para sortear uma cor</li>
+                <li>❓ Responda a pergunta da categoria sorteada</li>
+                <li>✅ Se acertar: coloque a parte do corpo na cor sorteada!</li>
+                <li>❌ Se errar: você está salvo nesta rodada!</li>
+                <li>🔄 Continue até completar 10 jogadas</li>
+                <li>🎉 Divirta-se e não caia!</li>
+            </ul>
+            <button id="btnFecharModal" style="width: 100%; margin-top: 15px;">Fechar</button>
+        </div>
     </div>
-
-    <div id="resultado">Gire a roleta para começar!</div>
-
-    <div class="pergunta-container" id="perguntaContainer">
-      <p id="textoPergunta"></p>
-      <div id="alternativas"></div>
-    </div>
-
-    <div class="info">
-      <p id="acertos">Pontos: 0 ✅</p>
-      <p id="perguntasRestantes">Jogadas restantes: 32</p>
-    </div>
-
-    <button id="btnProxima" disabled>Próxima Jogada</button>
-  </div>
-
-  <!-- Modal de Regras -->
-  <div id="modalRegras" class="modal-backdrop">
-    <div class="modal-content">
-      <h2>📜 Regras do Jogo</h2>
-      <ul>
-        <li>Gire a roleta e responda à pergunta da categoria sorteada.</li>
-        <li>Se acertar, mova a parte do corpo indicada para a cor sorteada!</li>
-        <li>Se errar, você está salvo e a rodada termina.</li>
-        <li>O jogo termina após 32 jogadas.</li>
-      </ul>
-      <button id="btnFecharModal">Fechar</button>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+ </div>
 </body>
 </html>
-
-
